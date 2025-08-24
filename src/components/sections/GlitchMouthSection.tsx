@@ -114,6 +114,19 @@ export function GlitchMouthSection() {
       <div className="fixed top-20 left-20 z-[999] bg-red-500 text-white p-4 text-xl font-bold">
         GLITCHMOUTH PAGE LOADED - {videos.length} videos
       </div>
+
+      {/* SIMPLE TEST CARDS */}
+      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[999] flex gap-8">
+        <div className="w-32 h-48 bg-red-500 flex items-center justify-center text-white font-bold text-xl">
+          TEST 1
+        </div>
+        <div className="w-32 h-48 bg-green-500 flex items-center justify-center text-white font-bold text-xl">
+          TEST 2
+        </div>
+        <div className="w-32 h-48 bg-blue-500 flex items-center justify-center text-white font-bold text-xl">
+          TEST 3
+        </div>
+      </div>
       {/* Back button */}
       <Link href="/">
         <motion.button
@@ -151,7 +164,7 @@ export function GlitchMouthSection() {
 
       {/* Video Grid - Only 3 videos centered and floating */}
       <motion.div
-        className="absolute inset-0 pt-32 pb-20 px-12 flex items-center justify-center z-50"
+        className="fixed inset-0 flex items-center justify-center z-[999]"
         animate={{
           opacity: selectedVideo ? 0 : 1,
           scale: selectedVideo ? 0.8 : 1,
