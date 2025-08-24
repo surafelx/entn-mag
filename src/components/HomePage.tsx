@@ -280,6 +280,18 @@ export function HomePage() {
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">
+      {/* Background Video */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover z-0"
+        src="/random.MOV"
+        autoPlay
+        loop
+        muted
+        playsInline
+        style={{
+          filter: 'brightness(0.3) contrast(1.2) saturate(0.8)',
+        }}
+      />
 
       {/* Dynamic Background Effects */}
       <motion.div
