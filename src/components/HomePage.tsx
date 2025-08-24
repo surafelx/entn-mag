@@ -445,7 +445,7 @@ export function HomePage() {
       {sections.map((section, index) => (
         <motion.div
           key={section.name}
-          className="absolute z-20"
+          className="absolute z-50"
           style={{
             left: sectionPositions[index].x,
             top: sectionPositions[index].y,
@@ -500,13 +500,14 @@ export function HomePage() {
               >
                 {/* Main text that glitches */}
                 <motion.span
-                  className="block text-sm md:text-base font-mono hover-vibrate transition-colors duration-200"
+                  className="block text-lg md:text-xl font-mono hover-vibrate transition-colors duration-200 font-bold"
                   style={{
                     color: hoveredSection === index ? section.color : '#ffffff',
                     textShadow: hoveredSection === index
                       ? `2px 2px 0px ${section.color}, -2px -2px 0px #000000`
-                      : '1px 1px 2px rgba(0,0,0,0.8)',
+                      : '2px 2px 4px rgba(0,0,0,0.9)',
                     filter: hoveredSection === index ? 'blur(0.5px)' : 'none',
+                    textStroke: '1px rgba(255,255,255,0.3)',
                   }}
                   animate={{
                     opacity: hoveredSection === index ? [1, 0.7, 1] : 1,
@@ -518,12 +519,13 @@ export function HomePage() {
 
                 {/* Description text */}
                 <motion.span
-                  className="block text-xs font-mono mt-1 opacity-70"
+                  className="block text-sm font-mono mt-2 font-medium"
                   style={{
-                    color: hoveredSection === index ? section.color : '#888888',
+                    color: hoveredSection === index ? section.color : '#cccccc',
+                    textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
                   }}
                   animate={{
-                    opacity: hoveredSection === index ? [0.7, 1, 0.7] : 0.5,
+                    opacity: hoveredSection === index ? [0.8, 1, 0.8] : 0.7,
                   }}
                   transition={{ duration: 0.2, repeat: hoveredSection === index ? Infinity : 0 }}
                 >
@@ -579,8 +581,6 @@ export function HomePage() {
           </Link>
         </motion.div>
       ))}
-
-
 
       {/* Background animated elements */}
       <div className="absolute inset-0 pointer-events-none">
