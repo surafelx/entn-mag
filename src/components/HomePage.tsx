@@ -270,6 +270,10 @@ export function HomePage() {
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">
+      {/* DEBUG: Test element to see if HomePage is rendering */}
+      <div className="absolute top-20 left-20 z-[200] bg-red-500 text-white p-4 text-2xl font-bold">
+        DEBUG: HomePage is rendering - {sections.length} sections
+      </div>
       {/* Dynamic Background Effects */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
@@ -442,11 +446,11 @@ export function HomePage() {
         </motion.div>
       </motion.div>
 
-      {/* Scattered Navigation Links */}
+      {/* Scattered Navigation Links - DEBUG */}
       {sections.map((section, index) => (
         <motion.div
           key={section.name}
-          className="absolute z-[100]"
+          className="absolute z-[100] pointer-events-auto"
           style={{
             left: sectionPositions[index].x,
             top: sectionPositions[index].y,
@@ -501,7 +505,7 @@ export function HomePage() {
               >
                 {/* Main text that glitches */}
                 <motion.span
-                  className="block text-2xl md:text-3xl font-mono hover-vibrate transition-colors duration-200 font-bold px-3 py-2 bg-black/80 border border-white/30"
+                  className="block text-3xl md:text-4xl font-mono hover-vibrate transition-colors duration-200 font-bold px-4 py-3 bg-red-500 border-4 border-yellow-400"
                   style={{
                     color: hoveredSection === index ? section.color : '#ffffff',
                     textShadow: hoveredSection === index
