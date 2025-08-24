@@ -373,7 +373,7 @@ export function HomePage() {
 
       {/* Central Content with fade effect */}
       <motion.div
-        className="absolute inset-0 flex flex-col items-center justify-center z-30"
+        className="fixed inset-0 flex flex-col items-center justify-center z-[9999] pointer-events-none"
         animate={{
           opacity: hoveredSection !== null ? 0.2 : 1,
           scale: hoveredSection !== null ? 0.95 : 1,

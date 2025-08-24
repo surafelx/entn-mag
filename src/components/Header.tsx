@@ -27,18 +27,19 @@ export function Header() {
 
   return (
     <motion.header
-      className="z-50 px-12 py-8 mt-8"
+    style={{margin: "30px"}}
+      className="z-50 "
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
     >
-      <div className="flex items-center justify-between relative p-8">
+      <div className="flex items-center justify-between relative p-8 mt-10">
         {/* Filter Button - Far Left */}
         <div className="flex-1">
           <FilterDropdown />
         </div>
 
-        Logo - Center
+        {/* Logo - Center */}
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <Link href="/">
             <motion.div
