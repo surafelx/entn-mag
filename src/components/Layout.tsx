@@ -107,7 +107,7 @@ export function Layout({ children, showHeaderFooter = true }: LayoutProps) {
       )}
 
       {/* Main Content */}
-      <div className="relative z-10">
+      <div className="relative z-20">
         {children}
       </div>
 
