@@ -10,6 +10,8 @@ export function GlitchMouthSection() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [glitchActive, setGlitchActive] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+  const [mouseTimeout, setMouseTimeout] = useState<NodeJS.Timeout | null>(null);
 
   // Mock video data - replace with real video URLs
   const videos = [
@@ -107,6 +109,33 @@ export function GlitchMouthSection() {
   }, []);
 
   const selectedVideoData = selectedVideo ? videos.find(v => v.id === selectedVideo) : null;
+
+  // Mouse movement detection for selected video
+  const handleMouseMove = () => {
+    if (selectedVideo) {
+      setShowControls(true);
+      if (mouseTimeout) {
+        clearTimeout(mouseTimeout);
+      }
+      const timeout = setTimeout(() => {
+        setShowControls(false);
+      }, 3000); // Hide controls after 3 seconds of no mouse movement
+      setMouseTimeout(timeout);
+    }
+  };
+
+  // Add mouse move listener when video is selected
+  useEffect(() => {
+    if (selectedVideo) {
+      document.addEventListener('mousemove', handleMouseMove);
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        if (mouseTimeout) {
+          clearTimeout(mouseTimeout);
+        }
+      };
+    }
+  }, [selectedVideo, mouseTimeout]);
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">
@@ -261,35 +290,48 @@ export function GlitchMouthSection() {
       <AnimatePresence>
         {selectedVideo && selectedVideoData && (
           <motion.div
-            className="fixed inset-0 bg-black/95 backdrop-blur-sm z-[999] flex items-center justify-center"
+            className="fixed inset-0 bg-black z-[999] flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
+            onMouseMove={handleMouseMove}
           >
-            {/* Close button */}
-            <motion.button
-              className="absolute top-6 right-6 text-white hover:text-[#ff0080] transition-colors z-[1000]"
-              onClick={() => {
-                setSelectedVideo(null);
-                setIsPlaying(false);
-              }}
-              data-interactive
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <X size={24} />
-            </motion.button>
+            {/* Close button - only visible when controls are shown */}
+            <AnimatePresence>
+              {showControls && (
+                <motion.button
+                  className="absolute top-6 right-6 text-white hover:text-[#ff0080] transition-colors z-[1000] bg-black/50 p-2 rounded-full"
+                  onClick={() => {
+                    setSelectedVideo(null);
+                    setIsPlaying(false);
+                    setShowControls(true);
+                  }}
+                  data-interactive
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <X size={24} />
+                </motion.button>
+              )}
+            </AnimatePresence>
 
-            <div className="flex items-center justify-center gap-12 max-w-7xl mx-auto px-8">
-              {/* Video Player */}
-              <motion.div
-                className="relative"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
+            {/* Large Centered Video Player */}
+            <motion.div
+              className="relative"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              <div className="relative aspect-[9/16] w-[60vh] max-w-[90vw] bg-black border-4 border-[#ff0080] overflow-hidden shadow-2xl"
+                style={{
+                  boxShadow: `0 0 50px rgba(255, 0, 128, 0.5), inset 0 0 30px rgba(255, 0, 128, 0.1)`
+                }}
               >
-                <div className="relative aspect-[9/16] w-80 bg-black border-2 border-[#ff0080] overflow-hidden">
                   <video
                     className="w-full h-full object-cover"
                     src={selectedVideoData.videoUrl}
@@ -301,26 +343,36 @@ export function GlitchMouthSection() {
                     }}
                   />
 
-                  {/* Video controls overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                    <div className="flex items-center justify-between">
-                      <button
-                        onClick={() => setIsPlaying(!isPlaying)}
-                        className="text-white hover:text-[#ff0080] transition-colors"
-                        data-interactive
+                  {/* Video controls overlay - only visible when controls are shown */}
+                  <AnimatePresence>
+                    {showControls && (
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        transition={{ duration: 0.3 }}
                       >
-                        {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-                      </button>
+                        <div className="flex items-center justify-between">
+                          <button
+                            onClick={() => setIsPlaying(!isPlaying)}
+                            className="text-white hover:text-[#ff0080] transition-colors bg-black/50 p-2 rounded-full"
+                            data-interactive
+                          >
+                            {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+                          </button>
 
-                      <button
-                        onClick={() => setIsMuted(!isMuted)}
-                        className="text-white hover:text-[#00ff41] transition-colors"
-                        data-interactive
-                      >
-                        {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-                      </button>
-                    </div>
-                  </div>
+                          <button
+                            onClick={() => setIsMuted(!isMuted)}
+                            className="text-white hover:text-[#00ff41] transition-colors bg-black/50 p-2 rounded-full"
+                            data-interactive
+                          >
+                            {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   {/* Glitch effect overlay */}
                   {glitchActive && (
@@ -350,66 +402,55 @@ export function GlitchMouthSection() {
                     </motion.div>
                   )}
                 </div>
-              </motion.div>
+            </motion.div>
 
-              {/* Video Info Text */}
-              <motion.div
-                className="flex-1 max-w-md"
-                initial={{ x: 50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.5 }}
-              >
-                <motion.h2
-                  className={`text-4xl font-bold font-mono mb-4 ${
-                    glitchActive ? 'text-glitch' : 'text-white'
-                  }`}
-                  data-text={selectedVideoData.title}
-                  style={{
-                    textShadow: glitchActive ? '2px 2px 0px #00ff41, -2px -2px 0px #ff0080' : 'none',
-                  }}
+            {/* Video Info Overlay - only visible when controls are shown */}
+            <AnimatePresence>
+              {showControls && (
+                <motion.div
+                  className="absolute bottom-20 left-8 max-w-md"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  {selectedVideoData.title}
-                </motion.h2>
+                  <motion.h2
+                    className={`text-2xl font-bold font-mono mb-2 ${
+                      glitchActive ? 'text-glitch' : 'text-white'
+                    }`}
+                    data-text={selectedVideoData.title}
+                    style={{
+                      textShadow: glitchActive ? '2px 2px 0px #00ff41, -2px -2px 0px #ff0080' : '2px 2px 4px rgba(0,0,0,1)',
+                    }}
+                  >
+                    {selectedVideoData.title}
+                  </motion.h2>
 
-                <motion.p
-                  className="text-gray-300 font-mono text-lg leading-relaxed mb-6"
-                  animate={{
-                    opacity: glitchActive ? [1, 0.7, 1] : 1,
-                  }}
-                  transition={{ duration: 0.1 }}
-                >
-                  {selectedVideoData.description}
-                </motion.p>
+                  <motion.p
+                    className="text-gray-300 font-mono text-sm leading-relaxed mb-3"
+                    style={{
+                      textShadow: '1px 1px 2px rgba(0,0,0,1)',
+                    }}
+                  >
+                    {selectedVideoData.description}
+                  </motion.p>
 
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4">
-                    <span className="text-[#00ff41] font-mono text-sm">DURATION:</span>
-                    <span className="text-white font-mono text-sm">{selectedVideoData.duration}</span>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <span className="text-[#00ff41] font-mono text-sm">TAGS:</span>
-                    <div className="flex gap-2">
-                      {selectedVideoData.tags.map((tag, i) => (
+                  <div className="flex items-center gap-4 text-xs font-mono">
+                    <span className="text-[#00ff41]">DURATION: {selectedVideoData.duration}</span>
+                    <div className="flex gap-1">
+                      {selectedVideoData.tags.slice(0, 2).map((tag, i) => (
                         <span
                           key={i}
-                          className="text-white font-mono text-sm bg-white/10 px-2 py-1 border border-white/20"
+                          className="text-white bg-black/60 px-2 py-1 border border-white/20"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
                   </div>
-                </div>
-
-                {/* Flickering cursor */}
-                <motion.span
-                  className="inline-block w-2 h-6 bg-[#00ff41] ml-2 mt-4"
-                  animate={{ opacity: [1, 0, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                />
-              </motion.div>
-            </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
