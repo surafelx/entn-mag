@@ -253,26 +253,40 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
   // Fallback to regular video if Three.js fails
   if (fallbackMode) {
     return (
-      <video
-        className="fixed inset-0 w-full h-full object-cover"
-        src={videoSrc}
-        autoPlay
-        loop
-        muted
-        playsInline
-        style={{
-          zIndex: 0,
-          filter: 'brightness(0.6) contrast(1.1) saturate(0.9)',
-        }}
-      />
+      <>
+        <video
+          className="fixed inset-0 w-full h-full object-cover"
+          src={videoSrc}
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            zIndex: 0,
+            filter: 'brightness(0.6) contrast(1.1) saturate(0.9)',
+          }}
+        />
+        {/* Black overlay */}
+        <div
+          className="fixed inset-0 w-full h-full bg-black"
+          style={{ zIndex: 1, opacity: 0.4 }}
+        />
+      </>
     );
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="fixed inset-0 w-full h-full"
-      style={{ zIndex: 0 }}
-    />
+    <>
+      <div
+        ref={containerRef}
+        className="fixed inset-0 w-full h-full"
+        style={{ zIndex: 0 }}
+      />
+      {/* Black overlay */}
+      <div
+        className="fixed inset-0 w-full h-full bg-black"
+        style={{ zIndex: 1, opacity: 0.4 }}
+      />
+    </>
   );
 }
