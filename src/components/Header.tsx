@@ -27,96 +27,86 @@ export function Header() {
 
   return (
     <motion.header
-      className="absolute top-0 left-0 right-0 z-50 p-6"
+      className="absolute top-0 left-0 right-0 z-50 p-8"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
     >
-      <div className="flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/">
-          <motion.div
-            className="group cursor-pointer"
-            data-interactive
-            whileHover={{ scale: 1.05 }}
-            onMouseEnter={() => setLogoGlitch(true)}
-            onMouseLeave={() => setLogoGlitch(false)}
-          >
-            <motion.img
-              src={logos[currentLogo]}
-              alt="ENTN Logo"
-              className="h-12 w-auto"
-              animate={{
-                filter: logoGlitch
-                  ? [
-                      'contrast(100%) saturate(100%) hue-rotate(0deg)',
-                      'contrast(200%) saturate(300%) hue-rotate(90deg)',
-                      'contrast(150%) saturate(200%) hue-rotate(180deg)',
-                      'contrast(100%) saturate(100%) hue-rotate(0deg)'
-                    ]
-                  : 'contrast(100%) saturate(100%) hue-rotate(0deg)',
-                scale: logoGlitch ? [1, 1.02, 0.98, 1] : 1,
-              }}
-              transition={{
-                duration: logoGlitch ? 0.2 : 0.5,
-                ease: logoGlitch ? "easeInOut" : "easeOut"
-              }}
-              style={{
-                imageRendering: 'pixelated',
-                filter: logoGlitch
-                  ? 'contrast(150%) saturate(200%) drop-shadow(2px 2px 0px #ff0080) drop-shadow(-2px -2px 0px #00ff41)'
-                  : 'contrast(110%) saturate(120%)',
-              }}
-            />
-          </motion.div>
-        </Link>
+      <div className="flex items-center justify-between relative">
+        {/* Filter Button - Far Left */}
+        <div className="flex-1">
+          <FilterDropdown />
+        </div>
 
-        {/* Navigation Links */}
-        <div className="flex items-center gap-8">
-          {/* Bootleg Shop */}
+        {/* Logo - Center */}
+        <div className="absolute left-1/2 transform -translate-x-1/2">
+          <Link href="/">
+            <motion.div
+              className="group cursor-pointer"
+              data-interactive
+              whileHover={{ scale: 1.05 }}
+              onMouseEnter={() => setLogoGlitch(true)}
+              onMouseLeave={() => setLogoGlitch(false)}
+            >
+              <motion.img
+                src={logos[currentLogo]}
+                alt="ENTN Logo"
+                className="h-12 w-auto"
+                animate={{
+                  filter: logoGlitch
+                    ? [
+                        'contrast(100%) saturate(100%) hue-rotate(0deg)',
+                        'contrast(200%) saturate(300%) hue-rotate(90deg)',
+                        'contrast(150%) saturate(200%) hue-rotate(180deg)',
+                        'contrast(100%) saturate(100%) hue-rotate(0deg)'
+                      ]
+                    : 'contrast(100%) saturate(100%) hue-rotate(0deg)',
+                  scale: logoGlitch ? [1, 1.02, 0.98, 1] : 1,
+                }}
+                transition={{
+                  duration: logoGlitch ? 0.2 : 0.5,
+                  ease: logoGlitch ? "easeInOut" : "easeOut"
+                }}
+                style={{
+                  imageRendering: 'pixelated',
+                  filter: logoGlitch
+                    ? 'contrast(150%) saturate(200%) drop-shadow(2px 2px 0px #ff0080) drop-shadow(-2px -2px 0px #00ff41)'
+                    : 'contrast(110%) saturate(120%)',
+                }}
+              />
+            </motion.div>
+          </Link>
+        </div>
+
+        {/* Navigation Icons - Right */}
+        <div className="flex items-center gap-6 flex-1 justify-end">
+          {/* Bootleg Shop Icon */}
           <Link href="/shop">
             <motion.div
-              className="flex items-center gap-2 text-white hover:text-[#ff0080] transition-colors font-mono text-sm group cursor-pointer"
+              className="text-white hover:text-[#ff0080] transition-colors cursor-pointer"
               data-interactive
-              whileHover={{ x: 2 }}
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <ShoppingBag size={16} />
-              <span className="group-hover:text-glitch" data-text="BOOTLEG SHOP">
-                BOOTLEG SHOP
-              </span>
+              <ShoppingBag size={20} />
             </motion.div>
           </Link>
 
-          {/* Filter Button */}
-          <FilterDropdown />
-
-          {/* Community Wall */}
+          {/* Community Wall Icon */}
           <Link href="/community">
             <motion.div
-              className="flex items-center gap-2 text-white hover:text-[#00ff41] transition-colors font-mono text-sm group cursor-pointer"
+              className="text-white hover:text-[#00ff41] transition-colors cursor-pointer"
               data-interactive
-              whileHover={{ x: 2 }}
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <Users size={16} />
-              <span className="group-hover:text-glitch" data-text="COMMUNITY WALL">
-                COMMUNITY WALL
-              </span>
+              <Users size={20} />
             </motion.div>
           </Link>
         </div>
       </div>
 
-      {/* Hued effects line */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 h-px"
-        style={{
-          background: 'linear-gradient(90deg, transparent, #ff0080, #00ff41, #ffff00, #ff0080, transparent)',
-        }}
-        animate={{
-          opacity: [0.3, 0.8, 0.3],
-        }}
-        transition={{ duration: 3, repeat: Infinity }}
-      />
+
     </motion.header>
   );
 }

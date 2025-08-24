@@ -109,7 +109,7 @@ export function GlitchMouthSection() {
   const selectedVideoData = selectedVideo ? videos.find(v => v.id === selectedVideo) : null;
 
   return (
-    <div className="w-full h-full relative overflow-hidden bg-black">
+    <div className="w-full h-full relative overflow-hidden">
       {/* Back button */}
       <Link href="/">
         <motion.button
@@ -145,30 +145,55 @@ export function GlitchMouthSection() {
         </h1>
       </motion.div>
 
-      {/* Video Grid */}
+      {/* Video Grid - Only 3 videos centered and floating */}
       <motion.div
-        className="absolute inset-0 pt-24 pb-8 px-8"
+        className="absolute inset-0 pt-32 pb-20 px-12 flex items-center justify-center"
         animate={{
           opacity: selectedVideo ? 0 : 1,
           scale: selectedVideo ? 0.8 : 1,
         }}
         transition={{ duration: 0.5 }}
       >
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 h-full overflow-y-auto">
-          {videos.map((video, index) => (
+        <div className="flex items-center justify-center gap-16">
+          {videos.slice(0, 3).map((video, index) => (
             <motion.div
               key={video.id}
               className="relative cursor-pointer group"
               data-interactive
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
+              initial={{ opacity: 0, y: 50, rotateY: -15 }}
+              animate={{
+                opacity: 1,
+                y: [0, -10, 0],
+                rotateY: 0,
+              }}
+              transition={{
+                delay: index * 0.3,
+                duration: 0.8,
+                y: {
+                  duration: 3 + index,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }
+              }}
+              whileHover={{
+                scale: 1.1,
+                rotateY: 5,
+                z: 50,
+                boxShadow: `0 20px 40px rgba(${index === 0 ? '255,0,128' : index === 1 ? '0,255,65' : '255,255,0'}, 0.3)`
+              }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setSelectedVideo(video.id)}
+              style={{
+                transformStyle: 'preserve-3d',
+              }}
             >
               {/* Video thumbnail */}
-              <div className="relative aspect-[9/16] bg-black border border-white/20 overflow-hidden">
+              <div className="relative aspect-[9/16] w-64 bg-black border-2 border-white/30 overflow-hidden shadow-2xl"
+                style={{
+                  borderColor: index === 0 ? '#ff0080' : index === 1 ? '#00ff41' : '#ffff00',
+                  boxShadow: `0 10px 30px rgba(${index === 0 ? '255,0,128' : index === 1 ? '0,255,65' : '255,255,0'}, 0.2)`
+                }}
+              >
                 <img
                   src={video.thumbnail}
                   alt={video.title}
@@ -192,8 +217,8 @@ export function GlitchMouthSection() {
                 </div>
 
                 {/* Video info */}
-                <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <h3 className="text-white font-mono text-xs font-bold mb-1 truncate">
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 to-transparent">
+                  <h3 className="text-white font-mono text-sm font-bold mb-2 truncate">
                     {video.title}
                   </h3>
                   <div className="flex justify-between items-center">
@@ -204,7 +229,10 @@ export function GlitchMouthSection() {
                       {video.tags.slice(0, 2).map((tag, i) => (
                         <span
                           key={i}
-                          className="text-[#00ff41] font-mono text-xs bg-black/40 px-1 rounded"
+                          className="font-mono text-xs bg-black/60 px-2 py-1 border border-white/20"
+                          style={{
+                            color: index === 0 ? '#ff0080' : index === 1 ? '#00ff41' : '#ffff00'
+                          }}
                         >
                           {tag}
                         </span>
