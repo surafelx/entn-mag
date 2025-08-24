@@ -32,13 +32,13 @@ export function Header() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
     >
-      <div className="flex items-center justify-between relative">
+      <div className="flex items-center justify-between relative p-8">
         {/* Filter Button - Far Left */}
         <div className="flex-1">
           <FilterDropdown />
         </div>
 
-        {/* Logo - Center */}
+        Logo - Center
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <Link href="/">
             <motion.div

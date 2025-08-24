@@ -502,14 +502,14 @@ export function HomePage() {
               >
                 {/* Main text that glitches */}
                 <motion.span
-                  className="block text-lg md:text-xl font-mono hover-vibrate transition-colors duration-200 font-bold px-3 py-2 bg-black/80 border border-white/30"
+                  className="block text-lg md:text-xl font-mono hover-vibrate transition-colors duration-200 font-bold"
                   style={{
                     color: hoveredSection === index ? section.color : '#ffffff',
                     textShadow: hoveredSection === index
                       ? `2px 2px 0px ${section.color}, -2px -2px 0px #000000`
                       : '2px 2px 4px rgba(0,0,0,0.9)',
                     filter: hoveredSection === index ? 'blur(0.5px)' : 'none',
-                    borderColor: hoveredSection === index ? section.color : 'rgba(255,255,255,0.3)',
+
                   }}
                   animate={{
                     opacity: hoveredSection === index ? [1, 0.7, 1] : 1,
