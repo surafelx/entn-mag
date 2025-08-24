@@ -151,12 +151,12 @@ export function HomePage() {
 
   // Update document title to match current theme
   useEffect(() => {
-    document.title = `ENTN - ${currentTheme}`;
+    document.title = `${currentTheme}`;
   }, [currentTheme]);
 
   // Set initial title on mount
   useEffect(() => {
-    document.title = `ENTN - ${currentTheme}`;
+    document.title = `${currentTheme}`;
   }, []);
 
   useEffect(() => {
@@ -404,13 +404,15 @@ export function HomePage() {
           transition={{ duration: 1, ease: "easeOut" }}
         >
           <motion.h2
-            className={`text-2xl font-mono tracking-wider ${
+            className={`text-2xl font-mono tracking-wider font-bold ${
               entnGlitch ? 'text-glitch' : ''
             }`}
             data-text={entnGlitch ? 'VOID' : 'ENTN'}
             style={{
               color: entnGlitch ? '#ff0080' : '#ffffff',
-              textShadow: entnGlitch ? '1px 1px 0px #00ff41, -1px -1px 0px #ffff00' : 'none',
+              textShadow: entnGlitch
+                ? '3px 3px 0px #000000, -1px -1px 0px #000000, 0 0 20px #ff0080'
+                : '3px 3px 6px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.8)',
             }}
             animate={{
               opacity: [0.8, 1, 0.8],
@@ -437,8 +439,10 @@ export function HomePage() {
             style={{
               fontFamily: 'Bebas Neue, sans-serif',
               color: logoGlitch ? '#ff0080' : '#ffffff',
-              textShadow: logoGlitch ? '4px 4px 0px #00ff41, -4px -4px 0px #ffff00' : '2px 2px 0px rgba(255,255,255,0.1)',
-              WebkitTextStroke: '2px rgba(255,255,255,0.1)',
+              textShadow: logoGlitch
+                ? '6px 6px 0px #000000, -2px -2px 0px #000000, 0 0 40px #ff0080'
+                : '6px 6px 12px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.8)',
+              WebkitTextStroke: '2px rgba(0,0,0,0.8)',
             }}
             animate={{
               scale: logoGlitch ? [1, 1.02, 0.98, 1] : 1,
@@ -449,14 +453,20 @@ export function HomePage() {
             {currentTheme}
           </motion.h1>
 
+        
+        </motion.div>
           <motion.p
-            className="text-lg mt-4 text-gray-400 font-mono tracking-widest"
-            animate={{ opacity: [0.6, 1, 0.6] }}
+            className="text-lg mt-6 font-mono tracking-widest font-bold px-4 py-2 inline-block"
+            style={{
+              color: '#ffffff',
+              textShadow: '2px 2px 4px rgba(0,0,0,1), 0 0 10px rgba(255,255,255,0.4)',
+              boxShadow: '0 0 20px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.1)',
+            }}
+            animate={{ opacity: [0.8, 1, 0.8] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
             by visualspam
           </motion.p>
-        </motion.div>
       </motion.div>
 
       {/* Scattered Navigation Links - DEBUG */}
@@ -522,10 +532,9 @@ export function HomePage() {
                   style={{
                     color: hoveredSection === index ? section.color : '#ffffff',
                     textShadow: hoveredSection === index
-                      ? `2px 2px 0px ${section.color}, -2px -2px 0px #000000`
-                      : '2px 2px 4px rgba(0,0,0,0.9)',
+                      ? `3px 3px 0px #000000, -1px -1px 0px #000000, 0 0 15px ${section.color}`
+                      : '3px 3px 6px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.8)',
                     filter: hoveredSection === index ? 'blur(0.5px)' : 'none',
-
                   }}
                   animate={{
                     opacity: hoveredSection === index ? [1, 0.7, 1] : 1,
