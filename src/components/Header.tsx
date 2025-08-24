@@ -1,13 +1,29 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ShoppingBag, Users, Zap } from 'lucide-react';
+import { ShoppingBag, Users } from 'lucide-react';
 import { FilterDropdown } from './FilterDropdown';
 
 export function Header() {
   const [logoGlitch, setLogoGlitch] = useState(false);
+  const [currentLogo, setCurrentLogo] = useState(0); // 0 for entn-logo.png, 1 for entn-logo-am.png
+
+  const logos = ['/entn-logo.png', '/entn-logo-am.png'];
+
+  // Auto-switch logos with glitch effect
+  useEffect(() => {
+    const logoSwitchInterval = setInterval(() => {
+      setLogoGlitch(true);
+      setTimeout(() => {
+        setCurrentLogo(prev => (prev + 1) % logos.length);
+        setTimeout(() => setLogoGlitch(false), 200);
+      }, 100);
+    }, 3000 + Math.random() * 2000); // Switch every 3-5 seconds
+
+    return () => clearInterval(logoSwitchInterval);
+  }, [logos.length]);
 
   return (
     <motion.header
@@ -20,45 +36,38 @@ export function Header() {
         {/* Logo */}
         <Link href="/">
           <motion.div
-            className="flex items-center gap-3 group cursor-pointer"
+            className="group cursor-pointer"
             data-interactive
             whileHover={{ scale: 1.05 }}
             onMouseEnter={() => setLogoGlitch(true)}
             onMouseLeave={() => setLogoGlitch(false)}
           >
-            <motion.div
-              className="w-8 h-8 border-2 border-white flex items-center justify-center"
+            <motion.img
+              src={logos[currentLogo]}
+              alt="ENTN Logo"
+              className="h-12 w-auto"
               animate={{
-                rotate: logoGlitch ? [0, 180, 360] : 0,
-                borderColor: logoGlitch ? ['#ffffff', '#ff0080', '#00ff41', '#ffffff'] : '#ffffff',
+                filter: logoGlitch
+                  ? [
+                      'contrast(100%) saturate(100%) hue-rotate(0deg)',
+                      'contrast(200%) saturate(300%) hue-rotate(90deg)',
+                      'contrast(150%) saturate(200%) hue-rotate(180deg)',
+                      'contrast(100%) saturate(100%) hue-rotate(0deg)'
+                    ]
+                  : 'contrast(100%) saturate(100%) hue-rotate(0deg)',
+                scale: logoGlitch ? [1, 1.02, 0.98, 1] : 1,
               }}
-              transition={{ duration: 0.5 }}
-            >
-              <Zap 
-                size={16} 
-                className={logoGlitch ? 'text-[#ff0080]' : 'text-white'}
-              />
-            </motion.div>
-            
-            <motion.span
-              className={`text-xl font-bold font-mono tracking-wider ${
-                logoGlitch ? 'text-glitch' : 'text-white'
-              }`}
-              data-text="ENTN"
+              transition={{
+                duration: logoGlitch ? 0.2 : 0.5,
+                ease: logoGlitch ? "easeInOut" : "easeOut"
+              }}
               style={{
-                textShadow: logoGlitch ? '1px 1px 0px #00ff41, -1px -1px 0px #ff0080' : 'none',
+                imageRendering: 'pixelated',
+                filter: logoGlitch
+                  ? 'contrast(150%) saturate(200%) drop-shadow(2px 2px 0px #ff0080) drop-shadow(-2px -2px 0px #00ff41)'
+                  : 'contrast(110%) saturate(120%)',
               }}
-            >
-              ENTN
-            </motion.span>
-            
-            <motion.span
-              className="text-xs font-mono text-gray-400 ml-2"
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              v2.1.3
-            </motion.span>
+            />
           </motion.div>
         </Link>
 
