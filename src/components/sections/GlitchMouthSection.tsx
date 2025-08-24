@@ -109,7 +109,11 @@ export function GlitchMouthSection() {
   const selectedVideoData = selectedVideo ? videos.find(v => v.id === selectedVideo) : null;
 
   return (
-    <div className="w-full h-full relative overflow-hidden">
+    <div className="w-full h-full relative overflow-hidden bg-black">
+      {/* DEBUG: Test element */}
+      <div className="fixed top-20 left-20 z-[999] bg-red-500 text-white p-4 text-xl font-bold">
+        GLITCHMOUTH PAGE LOADED - {videos.length} videos
+      </div>
       {/* Back button */}
       <Link href="/">
         <motion.button
@@ -188,21 +192,24 @@ export function GlitchMouthSection() {
               }}
             >
               {/* Video thumbnail */}
-              <div className="relative aspect-[9/16] w-64 border-2 border-white/30 overflow-hidden shadow-2xl"
+              <div className="relative aspect-[9/16] w-80 border-4 overflow-hidden shadow-2xl"
                 style={{
                   backgroundColor: index === 0 ? '#ff0080' : index === 1 ? '#00ff41' : '#ffff00',
                   borderColor: index === 0 ? '#ff0080' : index === 1 ? '#00ff41' : '#ffff00',
-                  boxShadow: `0 10px 30px rgba(${index === 0 ? '255,0,128' : index === 1 ? '0,255,65' : '255,255,0'}, 0.3)`
+                  boxShadow: `0 15px 40px rgba(${index === 0 ? '255,0,128' : index === 1 ? '0,255,65' : '255,255,0'}, 0.6)`
                 }}
               >
                 {/* Video placeholder with title */}
-                <div className="w-full h-full flex items-center justify-center bg-black/20">
+                <div className="w-full h-full flex items-center justify-center bg-black/30">
                   <div className="text-center">
-                    <div className="text-white font-mono text-lg font-bold mb-2">
+                    <div className="text-white font-mono text-3xl font-bold mb-4 drop-shadow-lg">
                       VIDEO {String(index + 1).padStart(2, '0')}
                     </div>
-                    <div className="text-white/80 font-mono text-sm">
+                    <div className="text-white font-mono text-xl drop-shadow-lg">
                       {video.duration}
+                    </div>
+                    <div className="text-white/90 font-mono text-lg mt-2 drop-shadow-lg">
+                      {video.title}
                     </div>
                   </div>
                 </div>
