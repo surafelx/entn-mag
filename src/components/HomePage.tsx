@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useHover } from '@/contexts/HoverContext';
+import { InteractiveVideoBackground } from './InteractiveVideoBackground';
 
 
 
@@ -280,17 +281,10 @@ export function HomePage() {
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">
-      {/* Background Video - Full Screen */}
-      <video
-        className="fixed inset-0 w-full h-full object-cover z-0"
-        src="/random.MOV"
-        autoPlay
-        loop
-        muted
-        playsInline
-        style={{
-          filter: 'brightness(0.6) contrast(1.1) saturate(0.9)',
-        }}
+      {/* Interactive Background Video */}
+      <InteractiveVideoBackground
+        videoSrc="/random.MOV"
+        hoveredSection={hoveredSection !== null ? sections[hoveredSection]?.name : null}
       />
 
       {/* Dynamic Background Effects */}
