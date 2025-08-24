@@ -97,6 +97,7 @@ export function Layout({ children, showHeaderFooter = true }: LayoutProps) {
       {/* Header */}
       {showHeaderFooter && (
         <motion.div
+          className="relative z-[100]"
           animate={{
             opacity: hoveredSection !== null ? 0.3 : 1,
           }}
@@ -116,6 +117,7 @@ export function Layout({ children, showHeaderFooter = true }: LayoutProps) {
         <>
           {/* Social Media Icons */}
           <motion.div
+            className="relative z-[100]"
             animate={{
               opacity: hoveredSection !== null ? 0.2 : 1,
             }}
@@ -126,6 +128,7 @@ export function Layout({ children, showHeaderFooter = true }: LayoutProps) {
 
           {/* Music Player */}
           <motion.div
+            className="relative z-[100]"
             animate={{
               opacity: hoveredSection !== null ? 0.2 : 1,
             }}
