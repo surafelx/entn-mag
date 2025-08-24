@@ -140,12 +140,22 @@ export function HomePage() {
   const [lastMouseMove, setLastMouseMove] = useState(Date.now());
 
   useEffect(() => {
-    const themes = ['RAW', 'CHAOS', 'VOID', 'STATIC', 'DECAY', 'PULSE'];
+    const themes = [E'];
     const interval = setInterval(() => {
       setCurrentTheme(themes[Math.floor(Math.random() * themes.length)]);
     }, 2000);
 
     return () => clearInterval(interval);
+  }, []);
+
+  // Update document title to match current theme
+  useEffect(() => {
+    document.title = `ENTN - ${currentTheme}`;
+  }, [currentTheme]);
+
+  // Set initial title on mount
+  useEffect(() => {
+    document.title = `ENTN - ${currentTheme}`;
   }, []);
 
   useEffect(() => {
