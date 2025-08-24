@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ShoppingBag, Users } from 'lucide-react';
+import { ShoppingBag, Users, Heart } from 'lucide-react';
 import { FilterDropdown } from './FilterDropdown';
 
 export function Header() {
@@ -90,6 +90,18 @@ export function Header() {
               whileTap={{ scale: 0.95 }}
             >
               <ShoppingBag size={20} />
+            </motion.div>
+          </Link>
+
+          {/* Donate Icon */}
+          <Link href="/donate">
+            <motion.div
+              className="text-white hover:text-[#00ff41] transition-colors cursor-pointer"
+              data-interactive
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Heart size={20} />
             </motion.div>
           </Link>
 

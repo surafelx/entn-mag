@@ -140,7 +140,7 @@ export function HomePage() {
   const [lastMouseMove, setLastMouseMove] = useState(Date.now());
 
   useEffect(() => {
-    const themes = [E'];
+    const themes = ['RAW', 'ጥሬ', 'خام', 'BRUTE', '生' ];
     const interval = setInterval(() => {
       setCurrentTheme(themes[Math.floor(Math.random() * themes.length)]);
     }, 2000);
