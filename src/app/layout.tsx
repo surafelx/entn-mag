@@ -3,7 +3,7 @@ import "./globals.css";
 import { CustomCursor } from "@/components/CustomCursor";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { KeyboardNavigation } from "@/components/KeyboardNavigation";
-import { Layout } from "@/components/Layout";
+
 import { HoverProvider } from "@/contexts/HoverContext";
 
 export const metadata: Metadata = {
@@ -28,9 +28,7 @@ export default function RootLayout({
 
         <main className="page-container">
           <HoverProvider>
-            <Layout>
-              {children}
-            </Layout>
+            {children}
           </HoverProvider>
         </main>
       </body>

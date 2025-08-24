@@ -4,6 +4,9 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useHover } from '@/contexts/HoverContext';
+import { Header } from './Header';
+import { SocialMedia } from './SocialMedia';
+import { MusicPlayer } from './MusicPlayer';
 
 
 
@@ -268,7 +271,16 @@ export function HomePage() {
   };
 
   return (
-    <div className="w-full h-full relative overflow-hidden">
+    <div className="w-full h-full relative overflow-hidden bg-black">
+      {/* Header */}
+      <motion.div
+        animate={{
+          opacity: hoveredSection !== null ? 0.3 : 1,
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        <Header />
+      </motion.div>
       {/* Dynamic Background Effects */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
@@ -605,7 +617,25 @@ export function HomePage() {
         ))}
       </div>
 
+      {/* Social Media Icons */}
+      <motion.div
+        animate={{
+          opacity: hoveredSection !== null ? 0.2 : 1,
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        <SocialMedia />
+      </motion.div>
 
+      {/* Music Player */}
+      <motion.div
+        animate={{
+          opacity: hoveredSection !== null ? 0.2 : 1,
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        <MusicPlayer />
+      </motion.div>
     </div>
   );
 }
