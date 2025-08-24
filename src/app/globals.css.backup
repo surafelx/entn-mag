@@ -1,7 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Grotesk:wght@300..700&family=Bebas+Neue&family=Creepster&display=swap');
-
-
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Grotesk:wght@300..700&family=Bebas+Neue&family=Creepster&display=swap');
 
 :root {
   --background: #0a0a0a;
@@ -25,68 +23,6 @@ html, body {
   color: var(--foreground);
   font-family: 'Space Grotesk', sans-serif;
   cursor: none;
-}
-
-/* VHS Background Effects */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-  background:
-    radial-gradient(circle at 20% 30%, rgba(255, 0, 128, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(255, 255, 0, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 60% 20%, rgba(153, 102, 255, 0.12) 0%, transparent 50%);
-  animation: colorShift 8s ease-in-out infinite;
-}
-
-@keyframes colorShift {
-  0%, 100% {
-    filter: blur(40px) saturate(1.2);
-    opacity: 0.6;
-  }
-  25% {
-    filter: blur(60px) saturate(1.5);
-    opacity: 0.8;
-  }
-  50% {
-    filter: blur(80px) saturate(0.8);
-    opacity: 0.4;
-  }
-  75% {
-    filter: blur(50px) saturate(1.8);
-    opacity: 0.7;
-  }
-}
-
-/* VHS Scanlines */
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 2;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(255, 255, 255, 0.02) 2px,
-    rgba(255, 255, 255, 0.02) 4px
-  );
-  animation: vhsDistortion 0.1s linear infinite;
-}
-
-@keyframes vhsDistortion {
-  0% { transform: translateY(0px); }
-  100% { transform: translateY(4px); }
 }
 
 /* Custom cursor */
@@ -228,43 +164,139 @@ body::after {
   transition: transform 0.2s ease;
 }
 
-/* Background effect animations */
-@keyframes glitchPulse {
-  0%, 100% { filter: contrast(1.5) saturate(2) hue-rotate(0deg); }
-  25% { filter: contrast(2) saturate(3) hue-rotate(90deg); }
-  50% { filter: contrast(1.8) saturate(1.5) hue-rotate(180deg); }
-  75% { filter: contrast(2.2) saturate(2.5) hue-rotate(270deg); }
+/* Page transition effects */
+.page-transition-enter {
+  opacity: 0;
+  transform: scale(0.95) rotate(1deg);
 }
 
-@keyframes colorWave {
-  0% { filter: blur(2px) brightness(1.2) hue-rotate(0deg); }
-  33% { filter: blur(4px) brightness(1.5) hue-rotate(120deg); }
-  66% { filter: blur(1px) brightness(1.8) hue-rotate(240deg); }
-  100% { filter: blur(2px) brightness(1.2) hue-rotate(360deg); }
+.page-transition-enter-active {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-@keyframes mapShift {
-  0% { filter: blur(40px) hue-rotate(45deg) saturate(1); }
-  50% { filter: blur(60px) hue-rotate(135deg) saturate(1.5); }
-  100% { filter: blur(40px) hue-rotate(225deg) saturate(1); }
+.page-transition-exit {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
 }
 
-@keyframes vinylSpin {
-  0% { filter: blur(20px) saturate(1.5) hue-rotate(0deg); }
-  100% { filter: blur(20px) saturate(1.5) hue-rotate(360deg); }
+.page-transition-exit-active {
+  opacity: 0;
+  transform: scale(1.05) rotate(-1deg);
+  transition: all 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
 
-@keyframes textChaos {
-  0% { filter: contrast(2) brightness(0.8) skew(0deg); }
-  25% { filter: contrast(2.5) brightness(0.6) skew(2deg); }
-  50% { filter: contrast(1.8) brightness(1) skew(-2deg); }
-  75% { filter: contrast(2.2) brightness(0.7) skew(1deg); }
-  100% { filter: contrast(2) brightness(0.8) skew(0deg); }
+/* Experimental text effects */
+.text-scramble {
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes defaultPulse {
-  0%, 100% { filter: blur(60px) saturate(1.5) brightness(1); }
-  50% { filter: blur(80px) saturate(2) brightness(1.2); }
+.text-scramble::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  animation: scramble 0.5s infinite;
+}
+
+@keyframes scramble {
+  0%, 100% { content: attr(data-text); }
+  10% { content: attr(data-scramble-1); }
+  20% { content: attr(data-scramble-2); }
+  30% { content: attr(data-scramble-3); }
+  40% { content: attr(data-scramble-4); }
+  50% { content: attr(data-scramble-5); }
+  60% { content: attr(data-scramble-4); }
+  70% { content: attr(data-scramble-3); }
+  80% { content: attr(data-scramble-2); }
+  90% { content: attr(data-scramble-1); }
+}
+
+/* Torn paper effects */
+.torn-edge {
+  position: relative;
+}
+
+.torn-edge::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: inherit;
+  clip-path: polygon(0 0, 5% 100%, 10% 0, 15% 100%, 20% 0, 25% 100%, 30% 0, 35% 100%, 40% 0, 45% 100%, 50% 0, 55% 100%, 60% 0, 65% 100%, 70% 0, 75% 100%, 80% 0, 85% 100%, 90% 0, 95% 100%, 100% 0, 100% 100%, 0 100%);
+}
+
+/* Scan lines effect */
+.scan-lines {
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-lines::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.03) 2px,
+    rgba(255, 255, 255, 0.03) 4px
+  );
+  pointer-events: none;
+  animation: scan 2s linear infinite;
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* Chromatic aberration */
+.chromatic {
+  position: relative;
+}
+
+.chromatic::before,
+.chromatic::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: screen;
+}
+
+.chromatic::before {
+  color: #ff0080;
+  transform: translateX(-1px);
+  animation: chromatic-r 0.1s infinite alternate;
+}
+
+.chromatic::after {
+  color: #00ff41;
+  transform: translateX(1px);
+  animation: chromatic-g 0.1s infinite alternate-reverse;
+}
+
+@keyframes chromatic-r {
+  0% { transform: translateX(-1px); }
+  100% { transform: translateX(-2px); }
+}
+
+@keyframes chromatic-g {
+  0% { transform: translateX(1px); }
+  100% { transform: translateX(2px); }
 }
 
 /* Mobile responsiveness */
