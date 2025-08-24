@@ -271,7 +271,7 @@ export function HomePage() {
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">
       {/* DEBUG: Test element to see if HomePage is rendering */}
-      <div className="absolute top-20 left-20 z-[200] bg-red-500 text-white p-4 text-2xl font-bold">
+      <div className="fixed top-20 left-20 z-[9999] bg-red-500 text-white p-4 text-2xl font-bold">
         DEBUG: HomePage is rendering - {sections.length} sections
       </div>
       {/* Dynamic Background Effects */}
@@ -450,7 +450,7 @@ export function HomePage() {
       {sections.map((section, index) => (
         <motion.div
           key={section.name}
-          className="absolute z-[100] pointer-events-auto"
+          className="fixed z-[9999] pointer-events-auto"
           style={{
             left: sectionPositions[index].x,
             top: sectionPositions[index].y,

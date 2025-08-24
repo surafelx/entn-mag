@@ -54,14 +54,12 @@ export function SocialMedia() {
             >
               {/* Icon */}
               <motion.div
-                className="w-10 h-10 border-2 flex items-center justify-center relative overflow-hidden"
+                className="w-10 h-10 flex items-center justify-center relative overflow-hidden"
                 style={{
-                  borderColor: isHovered ? social.color : '#ffffff40',
                   backgroundColor: isHovered ? `${social.color}20` : 'transparent',
                 }}
                 animate={{
                   rotate: isHovered ? [0, 5, -5, 0] : 0,
-                  borderColor: isHovered ? [social.color, social.glitchColor, social.color] : '#ffffff40',
                 }}
                 transition={{ 
                   duration: 0.3,

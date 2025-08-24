@@ -27,7 +27,7 @@ export function Header() {
 
   return (
     <motion.header
-      className="z-50 p-8 mt-4"
+      className="z-50 px-12 py-8 mt-8"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
