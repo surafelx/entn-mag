@@ -110,23 +110,7 @@ export function GlitchMouthSection() {
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">
-      {/* DEBUG: Test element */}
-      <div className="fixed top-20 left-20 z-[999] bg-red-500 text-white p-4 text-xl font-bold">
-        GLITCHMOUTH PAGE LOADED - {videos.length} videos
-      </div>
 
-      {/* SIMPLE TEST CARDS */}
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[999] flex gap-8">
-        <div className="w-32 h-48 bg-red-500 flex items-center justify-center text-white font-bold text-xl">
-          TEST 1
-        </div>
-        <div className="w-32 h-48 bg-green-500 flex items-center justify-center text-white font-bold text-xl">
-          TEST 2
-        </div>
-        <div className="w-32 h-48 bg-blue-500 flex items-center justify-center text-white font-bold text-xl">
-          TEST 3
-        </div>
-      </div>
       {/* Back button */}
       <Link href="/">
         <motion.button
@@ -277,7 +261,7 @@ export function GlitchMouthSection() {
       <AnimatePresence>
         {selectedVideo && selectedVideoData && (
           <motion.div
-            className="absolute inset-0 bg-black/95 backdrop-blur-sm z-50 flex items-center justify-center"
+            className="fixed inset-0 bg-black/95 backdrop-blur-sm z-[999] flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -285,7 +269,7 @@ export function GlitchMouthSection() {
           >
             {/* Close button */}
             <motion.button
-              className="absolute top-6 right-6 text-white hover:text-[#ff0080] transition-colors z-60"
+              className="absolute top-6 right-6 text-white hover:text-[#ff0080] transition-colors z-[1000]"
               onClick={() => {
                 setSelectedVideo(null);
                 setIsPlaying(false);
