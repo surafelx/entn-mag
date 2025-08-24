@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 interface InteractiveVideoBackgroundProps {
@@ -16,6 +16,7 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
   const videoRef = useRef<HTMLVideoElement>();
   const mouseRef = useRef({ x: 0, y: 0 });
   const animationRef = useRef<number>();
+  const [fallbackMode, setFallbackMode] = useState(false);
 
   // Custom shader for video manipulation
   const vertexShader = `
@@ -96,14 +97,24 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Create video element
+    try {
+      // Create video element
     const video = document.createElement('video');
     video.src = videoSrc;
     video.loop = true;
     video.muted = true;
     video.autoplay = true;
     video.playsInline = true;
+    video.crossOrigin = 'anonymous';
     videoRef.current = video;
+
+    // Debug video loading
+    video.addEventListener('loadstart', () => console.log('Video loading started'));
+    video.addEventListener('canplay', () => console.log('Video can play'));
+    video.addEventListener('error', (e) => console.error('Video error:', e));
+
+    // Try to play the video
+    video.play().catch(e => console.error('Video play error:', e));
 
     // Create Three.js scene
     const scene = new THREE.Scene();
@@ -122,6 +133,9 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
     const videoTexture = new THREE.VideoTexture(video);
     videoTexture.minFilter = THREE.LinearFilter;
     videoTexture.magFilter = THREE.LinearFilter;
+    videoTexture.format = THREE.RGBAFormat;
+
+    console.log('Video texture created:', videoTexture);
 
     // Create shader material
     const material = new THREE.ShaderMaterial({
@@ -210,6 +224,10 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
         rendererRef.current.dispose();
       }
     };
+    } catch (error) {
+      console.error('Three.js video background failed:', error);
+      setFallbackMode(true);
+    }
   }, [videoSrc]);
 
   // Update section color when hoveredSection changes
@@ -232,9 +250,27 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
     }
   }, [hoveredSection]);
 
+  // Fallback to regular video if Three.js fails
+  if (fallbackMode) {
+    return (
+      <video
+        className="fixed inset-0 w-full h-full object-cover"
+        src={videoSrc}
+        autoPlay
+        loop
+        muted
+        playsInline
+        style={{
+          zIndex: 0,
+          filter: 'brightness(0.6) contrast(1.1) saturate(0.9)',
+        }}
+      />
+    );
+  }
+
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className="fixed inset-0 w-full h-full"
       style={{ zIndex: 0 }}
     />
