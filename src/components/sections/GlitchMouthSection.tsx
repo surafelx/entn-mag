@@ -113,7 +113,7 @@ export function GlitchMouthSection() {
       {/* Back button */}
       <Link href="/">
         <motion.button
-          className="absolute top-6 left-6 z-50 flex items-center gap-2 text-white hover:text-[#ff0080] transition-colors font-mono text-sm"
+          className="absolute top-6 left-6 z-[70] flex items-center gap-2 text-white hover:text-[#ff0080] transition-colors font-mono text-sm bg-black/80 px-3 py-2 border border-white/30"
           data-interactive
           whileHover={{ x: -5 }}
         >
@@ -124,7 +124,7 @@ export function GlitchMouthSection() {
 
       {/* Section title */}
       <motion.div
-        className="absolute top-6 left-1/2 transform -translate-x-1/2 z-40"
+        className="absolute top-6 left-1/2 transform -translate-x-1/2 z-[60]"
         initial={{ opacity: 0, y: -20 }}
         animate={{
           opacity: selectedVideo ? 0 : 1,
@@ -147,7 +147,7 @@ export function GlitchMouthSection() {
 
       {/* Video Grid - Only 3 videos centered and floating */}
       <motion.div
-        className="absolute inset-0 pt-32 pb-20 px-12 flex items-center justify-center"
+        className="absolute inset-0 pt-32 pb-20 px-12 flex items-center justify-center z-50"
         animate={{
           opacity: selectedVideo ? 0 : 1,
           scale: selectedVideo ? 0.8 : 1,
@@ -188,17 +188,24 @@ export function GlitchMouthSection() {
               }}
             >
               {/* Video thumbnail */}
-              <div className="relative aspect-[9/16] w-64 bg-black border-2 border-white/30 overflow-hidden shadow-2xl"
+              <div className="relative aspect-[9/16] w-64 border-2 border-white/30 overflow-hidden shadow-2xl"
                 style={{
+                  backgroundColor: index === 0 ? '#ff0080' : index === 1 ? '#00ff41' : '#ffff00',
                   borderColor: index === 0 ? '#ff0080' : index === 1 ? '#00ff41' : '#ffff00',
-                  boxShadow: `0 10px 30px rgba(${index === 0 ? '255,0,128' : index === 1 ? '0,255,65' : '255,255,0'}, 0.2)`
+                  boxShadow: `0 10px 30px rgba(${index === 0 ? '255,0,128' : index === 1 ? '0,255,65' : '255,255,0'}, 0.3)`
                 }}
               >
-                <img
-                  src={video.thumbnail}
-                  alt={video.title}
-                  className="w-full h-full object-cover"
-                />
+                {/* Video placeholder with title */}
+                <div className="w-full h-full flex items-center justify-center bg-black/20">
+                  <div className="text-center">
+                    <div className="text-white font-mono text-lg font-bold mb-2">
+                      VIDEO {String(index + 1).padStart(2, '0')}
+                    </div>
+                    <div className="text-white/80 font-mono text-sm">
+                      {video.duration}
+                    </div>
+                  </div>
+                </div>
 
                 {/* Glitch overlay */}
                 <motion.div
