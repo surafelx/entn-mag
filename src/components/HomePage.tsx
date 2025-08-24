@@ -270,10 +270,7 @@ export function HomePage() {
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">
-      {/* DEBUG: Test element to see if HomePage is rendering */}
-      <div className="fixed top-20 left-20 z-[9999] bg-red-500 text-white p-4 text-2xl font-bold">
-        DEBUG: HomePage is rendering - {sections.length} sections
-      </div>
+
       {/* Dynamic Background Effects */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
@@ -376,7 +373,7 @@ export function HomePage() {
 
       {/* Central Content with fade effect */}
       <motion.div
-        className="absolute inset-0 flex flex-col items-center justify-center"
+        className="absolute inset-0 flex flex-col items-center justify-center z-30"
         animate={{
           opacity: hoveredSection !== null ? 0.2 : 1,
           scale: hoveredSection !== null ? 0.95 : 1,
@@ -505,7 +502,7 @@ export function HomePage() {
               >
                 {/* Main text that glitches */}
                 <motion.span
-                  className="block text-3xl md:text-4xl font-mono hover-vibrate transition-colors duration-200 font-bold px-4 py-3 bg-red-500 border-4 border-yellow-400"
+                  className="block text-lg md:text-xl font-mono hover-vibrate transition-colors duration-200 font-bold px-3 py-2 bg-black/80 border border-white/30"
                   style={{
                     color: hoveredSection === index ? section.color : '#ffffff',
                     textShadow: hoveredSection === index
