@@ -28,7 +28,7 @@ export function SocialMedia() {
 
   return (
     <motion.div
-      className="absolute bottom-6 right-6 z-30"
+      className="fixed bottom-6 right-6 z-30"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1, delay: 1 }}
