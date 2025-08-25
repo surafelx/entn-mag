@@ -19,9 +19,15 @@ export function useAutoCycle() {
   return context;
 }
 
+interface Section {
+  name: string;
+  color: string;
+  [key: string]: unknown;
+}
+
 interface AutoCycleProviderProps {
   children: ReactNode;
-  sections: any[];
+  sections: Section[];
 }
 
 export function AutoCycleProvider({ children, sections }: AutoCycleProviderProps) {

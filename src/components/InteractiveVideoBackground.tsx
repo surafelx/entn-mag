@@ -10,12 +10,12 @@ interface InteractiveVideoBackgroundProps {
 
 export function InteractiveVideoBackground({ videoSrc, hoveredSection }: InteractiveVideoBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<THREE.Scene>();
-  const rendererRef = useRef<THREE.WebGLRenderer>();
-  const materialRef = useRef<THREE.ShaderMaterial>();
-  const videoRef = useRef<HTMLVideoElement>();
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const materialRef = useRef<THREE.ShaderMaterial | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | null>(null);
   const [fallbackMode, setFallbackMode] = useState(false);
 
   // Custom shader for video manipulation

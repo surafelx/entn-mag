@@ -135,7 +135,7 @@ export function GlitchMouthSection() {
         }
       };
     }
-  }, [selectedVideo, mouseTimeout]);
+  }, [selectedVideo, mouseTimeout, handleMouseMove]);
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">

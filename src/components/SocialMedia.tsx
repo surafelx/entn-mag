@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Instagram, Twitter, Youtube, Github, Twitch, MessageCircle } from 'lucide-react';
+import { Instagram, Youtube } from 'lucide-react';
 
 export function SocialMedia() {
   const [hoveredIcon, setHoveredIcon] = useState<number | null>(null);

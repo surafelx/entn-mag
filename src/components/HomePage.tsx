@@ -130,7 +130,7 @@ const sections = [
 ];
 
 export function HomePage() {
-  const { hoveredSection, setHoveredSection, backgroundEffect, setBackgroundEffect } = useHover();
+  const { hoveredSection, setHoveredSection, setBackgroundEffect } = useHover();
   const [currentTheme, setCurrentTheme] = useState('RAW');
   const [logoGlitch, setLogoGlitch] = useState(false);
   const [entnGlitch, setEntnGlitch] = useState(false);
