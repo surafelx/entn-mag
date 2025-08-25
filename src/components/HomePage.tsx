@@ -1,10 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useHover } from '@/contexts/HoverContext';
 import { InteractiveVideoBackground } from './InteractiveVideoBackground';
+import { LoadingScreen } from './LoadingScreen';
+import { AnimatePresence } from 'framer-motion';
 
 
 
@@ -139,6 +141,36 @@ export function HomePage() {
   const [autoHoverIndex, setAutoHoverIndex] = useState(0);
   const [mouseIdle, setMouseIdle] = useState(false);
   const [lastMouseMove, setLastMouseMove] = useState(Date.now());
+  const [isLoading, setIsLoading] = useState(true);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Handle loading completion
+  const handleLoadComplete = () => {
+    setIsLoading(false);
+
+    // Play audio after loading is complete
+    if (audioRef.current) {
+      audioRef.current.volume = 0.3; // Set volume to 30%
+      audioRef.current.play().catch(error => {
+        console.log('Audio autoplay prevented:', error);
+        // Audio will play when user interacts with the page
+      });
+    }
+  };
+
+  // Initialize audio
+  useEffect(() => {
+    audioRef.current = new Audio('/nerliv.mp3');
+    audioRef.current.loop = true;
+    audioRef.current.preload = 'auto';
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const themes = ['RAW', 'ጥሬ', 'خام', 'BRUTE', '生' ];
@@ -281,6 +313,12 @@ export function HomePage() {
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">
+      {/* Loading Screen */}
+      <AnimatePresence>
+        {isLoading && (
+          <LoadingScreen onLoadComplete={handleLoadComplete} />
+        )}
+      </AnimatePresence>
 
       {/* Interactive Background Video */}
       <InteractiveVideoBackground
