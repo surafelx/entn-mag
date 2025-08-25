@@ -262,14 +262,14 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
           muted
           playsInline
           style={{
-            zIndex: 0,
+            zIndex: -10,
             filter: 'brightness(0.2) contrast(1.1) saturate(0.6)',
           }}
         />
         {/* Black overlay */}
         <div
           className="fixed inset-0 w-full h-full bg-black"
-          style={{ zIndex: 1, opacity: 0.9 }}
+          style={{ zIndex: -9, opacity: 0.6 }}
         />
       </>
     );
@@ -280,12 +280,12 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
       <div
         ref={containerRef}
         className="fixed inset-0 w-full h-full"
-        style={{ zIndex: 0 }}
+        style={{ zIndex: -10 }}
       />
       {/* Black overlay */}
       <div
         className="fixed inset-0 w-full h-full bg-black"
-        style={{ zIndex: 1, opacity: 0.4 }}
+        style={{ zIndex: -9, opacity: 0.6 }}
       />
     </>
   );

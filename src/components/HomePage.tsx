@@ -281,9 +281,10 @@ export function HomePage() {
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">
+
       {/* Interactive Background Video */}
       <InteractiveVideoBackground
-        videoSrc="/random.MOV"
+        videoSrc="/random.mp4"
         hoveredSection={hoveredSection !== null ? sections[hoveredSection]?.name : null}
       />
 
