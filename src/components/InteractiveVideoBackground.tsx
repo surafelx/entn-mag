@@ -17,6 +17,7 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
   const mouseRef = useRef({ x: 0, y: 0 });
   const animationRef = useRef<number | null>(null);
   const [fallbackMode, setFallbackMode] = useState(false);
+  const autoMouseRef = useRef({ x: 0.5, y: 0.5, targetX: 0.5, targetY: 0.5, speed: 0.02 });
 
   // Custom shader for video manipulation
   const vertexShader = `
@@ -188,17 +189,56 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
     const animate = () => {
       if (materialRef.current) {
         materialRef.current.uniforms.time.value += 0.01;
-        
-        // Gradually reduce effects when mouse is idle
-        materialRef.current.uniforms.glitchIntensity.value *= 0.95;
-        materialRef.current.uniforms.colorShift.value *= 0.95;
-        materialRef.current.uniforms.distortion.value *= 0.95;
+
+        // Automatic random mouse movement
+        const autoMouse = autoMouseRef.current;
+
+        // Generate new random target every few seconds
+        if (Math.random() < 0.005) { // ~0.5% chance per frame = new target every ~3-4 seconds
+          autoMouse.targetX = Math.random();
+          autoMouse.targetY = Math.random();
+          autoMouse.speed = 0.01 + Math.random() * 0.03; // Random speed between 0.01-0.04
+        }
+
+        // Smoothly move towards target
+        autoMouse.x += (autoMouse.targetX - autoMouse.x) * autoMouse.speed;
+        autoMouse.y += (autoMouse.targetY - autoMouse.y) * autoMouse.speed;
+
+        // Apply automatic mouse effects
+        const intensity = Math.sin(materialRef.current.uniforms.time.value * 0.5) * 0.5 + 0.5;
+        const mouseDistance = Math.sqrt(
+          Math.pow(autoMouse.x - 0.5, 2) + Math.pow(autoMouse.y - 0.5, 2)
+        );
+
+        // Create random video effects based on auto mouse position
+        materialRef.current.uniforms.glitchIntensity.value = mouseDistance * intensity * 2.0;
+        materialRef.current.uniforms.colorShift.value = Math.sin(autoMouse.x * Math.PI) * intensity;
+        materialRef.current.uniforms.distortion.value = Math.cos(autoMouse.y * Math.PI) * intensity * 0.5;
+
+        // Random color shifts
+        if (Math.random() < 0.01) { // 1% chance per frame for color burst
+          materialRef.current.uniforms.colorShift.value += Math.random() * 2.0 - 1.0;
+        }
+
+        // Random glitch bursts
+        if (Math.random() < 0.008) { // 0.8% chance per frame for glitch burst
+          materialRef.current.uniforms.glitchIntensity.value += Math.random() * 3.0;
+        }
+
+        // Random brightness/contrast shifts
+        if (Math.random() < 0.005) { // 0.5% chance per frame for brightness change
+          const brightness = 0.3 + Math.random() * 0.4; // Between 0.3-0.7
+          const contrast = 0.8 + Math.random() * 0.6; // Between 0.8-1.4
+          if (videoRef.current) {
+            videoRef.current.style.filter = `brightness(${brightness}) contrast(${contrast}) saturate(0.6)`;
+          }
+        }
       }
-      
+
       if (rendererRef.current && sceneRef.current) {
         rendererRef.current.render(sceneRef.current, camera);
       }
-      
+
       animationRef.current = requestAnimationFrame(animate);
     };
 
