@@ -12,6 +12,15 @@ export const metadata: Metadata = {
   keywords: ["digital zine", "underground", "experimental", "art", "culture"],
   authors: [{ name: "ENTN Collective" }],
   viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+      { url: '/entn-logo.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/entn-logo.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -21,6 +30,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="icon" href="/entn-logo.png" type="image/png" sizes="192x192" />
+        <link rel="apple-touch-icon" href="/entn-logo.png" sizes="180x180" />
+        <meta name="theme-color" content="#000000" />
+      </head>
       <body className="overflow-hidden">
         <CustomCursor />
         <GrainOverlay />
