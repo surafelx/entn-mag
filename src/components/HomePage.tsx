@@ -322,7 +322,7 @@ export function HomePage() {
 
       {/* Interactive Background Video */}
       <InteractiveVideoBackground
-        videoSrc="/random.mp4"
+        videoSrc="https://res.cloudinary.com/dnr6jc1yr/video/upload/v1756161815/random_hd9zvc.mp4"
         hoveredSection={hoveredSection !== null ? sections[hoveredSection]?.name : null}
       />
 

@@ -18,6 +18,7 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
   const animationRef = useRef<number | null>(null);
   const [fallbackMode, setFallbackMode] = useState(false);
   const autoMouseRef = useRef({ x: 0.5, y: 0.5, targetX: 0.5, targetY: 0.5, speed: 0.02 });
+  const videoEffectsRef = useRef({ hue: 0, saturation: 1, brightness: 0.4, contrast: 1.1 });
 
   // Custom shader for video manipulation
   const vertexShader = `
@@ -163,15 +164,22 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
     const handleMouseMove = (event: MouseEvent) => {
       mouseRef.current.x = event.clientX / window.innerWidth;
       mouseRef.current.y = 1.0 - (event.clientY / window.innerHeight);
-      
+
+      // Update video effects based on mouse position
+      const effects = videoEffectsRef.current;
+      effects.hue = mouseRef.current.x * 360; // 0-360 degrees
+      effects.saturation = 0.5 + mouseRef.current.y * 2.5; // 0.5-3.0
+      effects.brightness = 0.2 + mouseRef.current.x * 0.6; // 0.2-0.8
+      effects.contrast = 0.8 + mouseRef.current.y * 1.5; // 0.8-2.3
+
       if (materialRef.current) {
         materialRef.current.uniforms.mouse.value.set(mouseRef.current.x, mouseRef.current.y);
-        
+
         // Increase effects based on mouse movement
         const mouseSpeed = Math.abs(event.movementX) + Math.abs(event.movementY);
-        materialRef.current.uniforms.glitchIntensity.value = Math.min(mouseSpeed * 0.01, 1.0);
-        materialRef.current.uniforms.colorShift.value = mouseSpeed * 0.1;
-        materialRef.current.uniforms.distortion.value = mouseSpeed * 0.05;
+        materialRef.current.uniforms.glitchIntensity.value = Math.min(mouseSpeed * 0.02, 2.0);
+        materialRef.current.uniforms.colorShift.value = mouseSpeed * 0.15;
+        materialRef.current.uniforms.distortion.value = mouseSpeed * 0.08;
       }
     };
 
@@ -225,12 +233,39 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
           materialRef.current.uniforms.glitchIntensity.value += Math.random() * 3.0;
         }
 
-        // Random brightness/contrast shifts
-        if (Math.random() < 0.005) { // 0.5% chance per frame for brightness change
-          const brightness = 0.3 + Math.random() * 0.4; // Between 0.3-0.7
-          const contrast = 0.8 + Math.random() * 0.6; // Between 0.8-1.4
+        // Apply continuous video effects based on mouse + auto effects
+        const effects = videoEffectsRef.current;
+        const autoHue = Math.sin(materialRef.current.uniforms.time.value * 0.3) * 180; // -180 to 180
+        const autoSat = 1 + Math.cos(materialRef.current.uniforms.time.value * 0.4) * 0.8; // 0.2 to 1.8
+
+        const finalHue = effects.hue + autoHue;
+        const finalSat = Math.max(0.1, effects.saturation * autoSat);
+        const finalBrightness = effects.brightness + Math.sin(materialRef.current.uniforms.time.value * 0.2) * 0.2;
+        const finalContrast = effects.contrast + Math.cos(materialRef.current.uniforms.time.value * 0.25) * 0.3;
+
+        if (videoRef.current) {
+          videoRef.current.style.filter = `
+            hue-rotate(${finalHue}deg)
+            saturate(${finalSat})
+            brightness(${Math.max(0.1, finalBrightness)})
+            contrast(${Math.max(0.5, finalContrast)})
+          `;
+        }
+
+        // Random extreme effects bursts
+        if (Math.random() < 0.003) { // 0.3% chance per frame for extreme burst
+          const extremeHue = Math.random() * 360;
+          const extremeSat = 2 + Math.random() * 3; // 2-5
+          const extremeBrightness = 0.5 + Math.random() * 0.8;
+          const extremeContrast = 1.5 + Math.random() * 1.5;
+
           if (videoRef.current) {
-            videoRef.current.style.filter = `brightness(${brightness}) contrast(${contrast}) saturate(0.6)`;
+            videoRef.current.style.filter = `
+              hue-rotate(${extremeHue}deg)
+              saturate(${extremeSat})
+              brightness(${extremeBrightness})
+              contrast(${extremeContrast})
+            `;
           }
         }
       }
@@ -303,7 +338,7 @@ export function InteractiveVideoBackground({ videoSrc, hoveredSection }: Interac
           playsInline
           style={{
             zIndex: -10,
-            filter: 'brightness(0.2) contrast(1.1) saturate(0.6)',
+            filter: 'hue-rotate(0deg) saturate(1.5) brightness(0.4) contrast(1.2)',
           }}
         />
         {/* Black overlay */}

@@ -184,27 +184,7 @@ export function LoadingScreen({ onLoadComplete }: LoadingScreenProps) {
           {loadingText}
         </motion.div>
 
-        {/* Progress bar */}
-        <div className="w-80 h-2 bg-gray-800 border border-white/30 mx-auto mb-4">
-          <motion.div
-            className="h-full bg-gradient-to-r from-[#ff0080] via-[#00ff41] to-[#ffff00]"
-            style={{ width: `${progress}%` }}
-            animate={{
-              opacity: glitchActive ? [1, 0.5, 1] : 1,
-            }}
-            transition={{ duration: 0.1 }}
-          />
-        </div>
 
-        {/* Progress percentage */}
-        <motion.div
-          className="text-lg font-mono text-gray-400"
-          animate={{
-            color: glitchActive ? '#ff0080' : '#9ca3af',
-          }}
-        >
-          {Math.floor(progress)}%
-        </motion.div>
 
         {/* Glitch lines */}
         <AnimatePresence>
