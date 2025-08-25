@@ -160,7 +160,7 @@ export function HomePage() {
 
   // Initialize audio
   useEffect(() => {
-    audioRef.current = new Audio('/nerliv.mp3');
+    audioRef.current = new Audio('https://res.cloudinary.com/dnr6jc1yr/video/upload/v1756161766/nerliv_gv7lec.mp3');
     audioRef.current.loop = true;
     audioRef.current.preload = 'auto';
 

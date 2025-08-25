@@ -12,6 +12,7 @@ export function LoadingScreen({ onLoadComplete }: LoadingScreenProps) {
   const [glitchActive, setGlitchActive] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentPhase, setCurrentPhase] = useState(0);
+  const [currentLogo, setCurrentLogo] = useState(0);
 
   const loadingPhrases = [
     'INITIALIZING',
@@ -22,6 +23,11 @@ export function LoadingScreen({ onLoadComplete }: LoadingScreenProps) {
     'DIGITAL DECAY',
     'SYSTEM BREACH',
     'ENTERING ENTN'
+  ];
+
+  const logos = [
+    '/entn-logo.png',
+    '/entn-logo-am.png'
   ];
 
   const glitchChars = '!@#$%^&*()_+-=[]{}|;:,.<>?~`';
@@ -53,6 +59,11 @@ export function LoadingScreen({ onLoadComplete }: LoadingScreenProps) {
       setCurrentPhase(prev => (prev + 1) % loadingPhrases.length);
     }, 800);
 
+    // Change logos
+    const logoInterval = setInterval(() => {
+      setCurrentLogo(prev => (prev + 1) % logos.length);
+    }, 600); // Faster logo switching for more chaos
+
     // Random glitch activation
     const glitchInterval = setInterval(() => {
       setGlitchActive(Math.random() < 0.4);
@@ -71,6 +82,7 @@ export function LoadingScreen({ onLoadComplete }: LoadingScreenProps) {
     return () => {
       clearInterval(progressInterval);
       clearInterval(phraseInterval);
+      clearInterval(logoInterval);
       clearInterval(glitchInterval);
       clearInterval(textInterval);
     };
@@ -109,22 +121,51 @@ export function LoadingScreen({ onLoadComplete }: LoadingScreenProps) {
       {/* Main loading content */}
       <div className="text-center z-10">
         {/* ENTN Logo */}
-        <motion.h1
-          className="text-8xl font-bold font-mono mb-8 text-white"
-          style={{
-            fontFamily: 'Bebas Neue, sans-serif',
-            textShadow: glitchActive 
-              ? '4px 4px 0px #ff0080, -4px -4px 0px #00ff41, 0 0 20px #ffff00'
-              : '2px 2px 4px rgba(0,0,0,1)',
-          }}
+        <motion.div
+          className="mb-8 relative"
           animate={{
             scale: glitchActive ? [1, 1.05, 0.95, 1] : 1,
-            x: glitchActive ? [0, -2, 2, 0] : 0,
+            x: glitchActive ? [0, -4, 4, 0] : 0,
+            y: glitchActive ? [0, -2, 2, 0] : 0,
           }}
           transition={{ duration: 0.1 }}
         >
-          {glitchActive ? glitchText('ENTN') : 'ENTN'}
-        </motion.h1>
+          <motion.img
+            src={logos[currentLogo]}
+            alt="ENTN Logo"
+            className="h-32 w-auto mx-auto"
+            style={{
+              filter: glitchActive
+                ? `hue-rotate(${Math.random() * 360}deg) saturate(${1 + Math.random() * 2}) brightness(${0.8 + Math.random() * 0.6}) contrast(${1 + Math.random()})`
+                : 'brightness(1) contrast(1) saturate(1)',
+              mixBlendMode: glitchActive ? 'screen' : 'normal',
+            }}
+            animate={{
+              opacity: glitchActive ? [1, 0.7, 1] : 1,
+            }}
+            transition={{ duration: 0.05 }}
+          />
+
+          {/* Glitch overlay for logo */}
+          {glitchActive && (
+            <motion.img
+              src={logos[currentLogo]}
+              alt="ENTN Logo Glitch"
+              className="absolute top-0 left-1/2 transform -translate-x-1/2 h-32 w-auto"
+              style={{
+                filter: `hue-rotate(${Math.random() * 360}deg) saturate(3) brightness(1.5) contrast(2)`,
+                mixBlendMode: 'difference',
+                opacity: 0.6,
+              }}
+              animate={{
+                x: [0, -2, 2, 0],
+                y: [0, 1, -1, 0],
+                opacity: [0.6, 0.3, 0.6],
+              }}
+              transition={{ duration: 0.05 }}
+            />
+          )}
+        </motion.div>
 
         {/* Loading text */}
         <motion.div
