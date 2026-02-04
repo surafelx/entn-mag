@@ -3,7 +3,6 @@ import "./globals.css";
 import { CustomCursor } from "@/components/CustomCursor";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { KeyboardNavigation } from "@/components/KeyboardNavigation";
-import { Layout } from "@/components/Layout";
 import { HoverProvider } from "@/contexts/HoverContext";
 
 export const viewport: Viewport = {
@@ -43,18 +42,15 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
       </head>
-      <body className="overflow-hidden">
+      <body>
         <CustomCursor />
         <GrainOverlay />
         <KeyboardNavigation />
-
-        <main className="page-container">
-          <HoverProvider>
-            <Layout>
-              {children}
-            </Layout>
-          </HoverProvider>
-        </main>
+        <HoverProvider>
+          <main className="page-container">
+            {children}
+          </main>
+        </HoverProvider>
       </body>
     </html>
   );

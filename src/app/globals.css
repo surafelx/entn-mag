@@ -24,7 +24,6 @@ html, body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Space Grotesk', sans-serif;
-  cursor: none;
 }
 
 /* VHS Background Effects - Optimized static gradient */
@@ -74,8 +73,13 @@ body::after {
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
-  mix-blend-mode: difference;
-  transition: transform 0.1s ease;
+  transition: transform 0.15s ease-out;
+}
+
+/* Simple fadeIn animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Grain texture overlay - static for performance */

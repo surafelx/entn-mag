@@ -1,31 +1,38 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 export function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
-  const [isHovering, setIsHovering] = useState(false);
+  const isHoveringRef = useRef(false);
 
   useEffect(() => {
     const cursor = cursorRef.current;
     if (!cursor) return;
 
-    // Use direct DOM manipulation for smooth cursor - no React re-renders
+    let animationFrameId: number;
+
     const updateMousePosition = (e: MouseEvent) => {
-      cursor.style.transform = `translate3d(${e.clientX - 10}px, ${e.clientY - 10}px, 0) scale(${isHovering ? 1.5 : 1})`;
+      // Use requestAnimationFrame for smooth 60fps updates
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(() => {
+        const scale = isHoveringRef.current ? 1.3 : 1;
+        cursor.style.left = `${e.clientX - 10}px`;
+        cursor.style.top = `${e.clientY - 10}px`;
+        cursor.style.transform = `scale(${scale})`;
+      });
     };
 
     const handleMouseEnter = () => {
-      setIsHovering(true);
-      cursor.style.transform = cursor.style.transform.replace(/scale\([^)]+\)/, 'scale(1.5)');
+      isHoveringRef.current = true;
+      cursor.style.transform = 'scale(1.3)';
     };
     
     const handleMouseLeave = () => {
-      setIsHovering(false);
-      cursor.style.transform = cursor.style.transform.replace(/scale\([^)]+\)/, 'scale(1)');
+      isHoveringRef.current = false;
+      cursor.style.transform = 'scale(1)';
     };
 
-    // Use MutationObserver to handle dynamically added elements
     const addListeners = () => {
       const interactiveElements = document.querySelectorAll('a, button, [data-interactive]');
       interactiveElements.forEach(el => {
@@ -39,29 +46,26 @@ export function CustomCursor() {
     window.addEventListener('mousemove', updateMousePosition, { passive: true });
 
     return () => {
+      cancelAnimationFrame(animationFrameId);
       window.removeEventListener('mousemove', updateMousePosition);
       elements.forEach(el => {
         el.removeEventListener('mouseenter', handleMouseEnter);
         el.removeEventListener('mouseleave', handleMouseLeave);
       });
     };
-  }, [isHovering]);
+  }, []);
 
   return (
     <div
       ref={cursorRef}
-      className="cursor"
       style={{
         position: 'fixed',
         width: '20px',
         height: '20px',
-        backgroundColor: 'var(--accent)',
+        backgroundColor: '#ff0080',
         borderRadius: '50%',
         pointerEvents: 'none',
         zIndex: 9999,
-        mixBlendMode: 'difference',
-        willChange: 'transform',
-        transition: 'transform 0.05s ease-out',
         top: 0,
         left: 0,
       }}

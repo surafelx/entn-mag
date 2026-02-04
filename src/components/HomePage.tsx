@@ -134,13 +134,6 @@ const sections = [
 export function HomePage() {
   const { hoveredSection, setHoveredSection, setBackgroundEffect } = useHover();
   const [currentTheme, setCurrentTheme] = useState('RAW');
-  const [logoGlitch, setLogoGlitch] = useState(false);
-  const [entnGlitch, setEntnGlitch] = useState(false);
-  const [sectionPositions, setSectionPositions] = useState(sections.map(s => s.position));
-  const [isAutoHovering, setIsAutoHovering] = useState(false);
-  const [autoHoverIndex, setAutoHoverIndex] = useState(0);
-  const [mouseIdle, setMouseIdle] = useState(false);
-  const [lastMouseMove, setLastMouseMove] = useState(Date.now());
   const [isLoading, setIsLoading] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -150,11 +143,8 @@ export function HomePage() {
 
     // Play audio after loading is complete
     if (audioRef.current) {
-      audioRef.current.volume = 0.3; // Set volume to 30%
-      audioRef.current.play().catch(error => {
-        console.log('Audio autoplay prevented:', error);
-        // Audio will play when user interacts with the page
-      });
+      audioRef.current.volume = 0.3;
+      audioRef.current.play().catch(() => {});
     }
   };
 
@@ -172,102 +162,21 @@ export function HomePage() {
     };
   }, []);
 
+  // Single interval for theme changes - less frequent
   useEffect(() => {
     const themes = ['RAW', 'ጥሬ', 'خام', 'BRUTE', '生' ];
+    document.title = currentTheme;
+    
     const interval = setInterval(() => {
-      setCurrentTheme(themes[Math.floor(Math.random() * themes.length)]);
-    }, 2000);
+      const newTheme = themes[Math.floor(Math.random() * themes.length)];
+      setCurrentTheme(newTheme);
+      document.title = newTheme;
+    }, 5000); // Slower: every 5 seconds
 
     return () => clearInterval(interval);
-  }, []);
-
-  // Update document title to match current theme
-  useEffect(() => {
-    document.title = `${currentTheme}`;
   }, [currentTheme]);
 
-  // Set initial title on mount
-  useEffect(() => {
-    document.title = `${currentTheme}`;
-  }, []);
 
-  useEffect(() => {
-    const glitchInterval = setInterval(() => {
-      setLogoGlitch(true);
-      setTimeout(() => setLogoGlitch(false), 200);
-    }, 4000);
-
-    return () => clearInterval(glitchInterval);
-  }, []);
-
-  useEffect(() => {
-    const entnGlitchInterval = setInterval(() => {
-      setEntnGlitch(true);
-      setTimeout(() => setEntnGlitch(false), 150);
-    }, 3000);
-
-    return () => clearInterval(entnGlitchInterval);
-  }, []);
-
-  // Animate section positions
-  useEffect(() => {
-    const moveInterval = setInterval(() => {
-      setSectionPositions(prev => prev.map((pos, index) => ({
-        x: `${parseFloat(pos.x) + (Math.random() - 0.5) * 2}%`,
-        y: `${parseFloat(pos.y) + (Math.random() - 0.5) * 2}%`,
-      })));
-    }, 5000);
-
-    return () => clearInterval(moveInterval);
-  }, []);
-
-  // Mouse idle detection
-  useEffect(() => {
-    const handleMouseMove = () => {
-      setLastMouseMove(Date.now());
-      setMouseIdle(false);
-      setIsAutoHovering(false);
-    };
-
-    const checkMouseIdle = setInterval(() => {
-      const now = Date.now();
-      if (now - lastMouseMove > 3000 && !mouseIdle) { // 3 seconds of inactivity
-        setMouseIdle(true);
-        setIsAutoHovering(true);
-      }
-    }, 1000);
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      clearInterval(checkMouseIdle);
-    };
-  }, [lastMouseMove, mouseIdle]);
-
-  // Auto-hover cycling effect
-  useEffect(() => {
-    let autoHoverInterval: NodeJS.Timeout;
-
-    if (isAutoHovering && mouseIdle) {
-      autoHoverInterval = setInterval(() => {
-        setAutoHoverIndex(prev => {
-          const nextIndex = (prev + 1) % sections.length;
-          setHoveredSection(nextIndex);
-          setBackgroundEffect(sections[nextIndex].name);
-          return nextIndex;
-        });
-      }, 2000); // Change every 2 seconds
-    } else {
-      setHoveredSection(null);
-      setBackgroundEffect(null);
-    }
-
-    return () => {
-      if (autoHoverInterval) {
-        clearInterval(autoHoverInterval);
-      }
-    };
-  }, [isAutoHovering, mouseIdle]);
 
   const getBackgroundEffect = (sectionIndex: number) => {
     const section = sections[sectionIndex];
@@ -436,64 +345,33 @@ export function HomePage() {
         transition={{ duration: 0.3 }}
       >
         {/* Small ENTN text */}
-        <motion.div
-          className="text-center mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-        >
-          <motion.h2
-            className={`text-2xl font-mono tracking-wider font-bold ${
-              entnGlitch ? 'text-glitch' : ''
-            }`}
-            data-text={entnGlitch ? 'VOID' : 'ENTN'}
+        <div className="text-center mb-8">
+          <h2
+            className="text-2xl font-mono tracking-wider font-bold"
             style={{
-              color: entnGlitch ? '#ff0080' : '#ffffff',
-              textShadow: entnGlitch
-                ? '3px 3px 0px #000000, -1px -1px 0px #000000, 0 0 20px #ff0080'
-                : '3px 3px 6px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.8)',
+              color: '#ffffff',
+              textShadow: '3px 3px 6px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.8)',
             }}
-            animate={{
-              opacity: [0.8, 1, 0.8],
-              scale: entnGlitch ? [1, 1.05, 1] : 1,
-            }}
-            transition={{ duration: 0.5, repeat: Infinity }}
           >
-            {entnGlitch ? 'VOID' : 'ENTN'}
-          </motion.h2>
-        </motion.div>
+            ENTN
+          </h2>
+        </div>
 
         {/* Main RAW title */}
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
-        >
-          <motion.h1
-            className={`text-9xl md:text-[12rem] font-bold tracking-wider ${
-              logoGlitch ? 'text-glitch' : ''
-            }`}
+        <div className="text-center">
+          <h1
+            className="text-9xl md:text-[12rem] font-bold tracking-wider"
             data-text={currentTheme}
             style={{
               fontFamily: 'Bebas Neue, sans-serif',
-              color: logoGlitch ? '#ff0080' : '#ffffff',
-              textShadow: logoGlitch
-                ? '6px 6px 0px #000000, -2px -2px 0px #000000, 0 0 40px #ff0080'
-                : '6px 6px 12px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.8)',
+              color: '#ffffff',
+              textShadow: '6px 6px 12px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.8)',
               WebkitTextStroke: '2px rgba(0,0,0,0.8)',
             }}
-            animate={{
-              scale: logoGlitch ? [1, 1.02, 0.98, 1] : 1,
-              rotate: logoGlitch ? [0, 0.5, -0.5, 0] : 0,
-            }}
-            transition={{ duration: 0.2 }}
           >
             {currentTheme}
-          </motion.h1>
-
-        
-        </motion.div>
+          </h1>
+        </div>
           <motion.p
             className="text-lg mt-6 font-mono tracking-widest font-bold px-4 py-2 inline-block"
             style={{
@@ -510,166 +388,57 @@ export function HomePage() {
 
       {/* Scattered Navigation Links - DEBUG */}
       {sections.map((section, index) => (
-        <motion.div
+        <div
           key={section.name}
-          className="fixed z-[9999] pointer-events-auto"
+          className="fixed z-[9999] pointer-events-auto transition-all duration-300"
           style={{
-            left: sectionPositions[index].x,
-            top: sectionPositions[index].y,
-            transform: `rotate(${section.rotation}deg)`,
-          }}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{
-            opacity: hoveredSection !== null ? (hoveredSection === index ? 1 : 0.1) : 1,
-            y: 0,
-            x: hoveredSection === index ? [0, 2, -2, 0] : 0,
-            scale: hoveredSection === index ? 1.3 : (hoveredSection !== null ? 0.8 : 1),
-          }}
-          transition={{
-            delay: index * 0.1,
-            duration: 0.6,
-            x: { duration: 0.3, repeat: hoveredSection === index ? Infinity : 0 },
-            opacity: { duration: 0.3 },
-            scale: { duration: 0.3 }
+            left: section.position.x,
+            top: section.position.y,
+            transform: `rotate(${section.rotation}deg) scale(${hoveredSection === index ? 1.2 : 1})`,
+            opacity: hoveredSection !== null ? (hoveredSection === index ? 1 : 0.3) : 1,
           }}
           onMouseEnter={() => {
-            if (!isAutoHovering) {
-              setHoveredSection(index);
-              setBackgroundEffect(section.name);
-            }
+            setHoveredSection(index);
+            setBackgroundEffect(section.name);
           }}
           onMouseLeave={() => {
-            if (!isAutoHovering) {
-              setHoveredSection(null);
-              setBackgroundEffect(null);
-            }
+            setHoveredSection(null);
+            setBackgroundEffect(null);
           }}
         >
-          <Link href={`/${section.name}`}>
-            <motion.div
-              className="group cursor-pointer relative"
-              data-interactive
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <motion.div
-                className="relative"
-                animate={{
-                  y: [0, -3, 0],
-                  rotate: hoveredSection === index ? [0, 5, -5, 0] : 0,
-                }}
-                transition={{
-                  duration: 2 + Math.random() * 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  rotate: { duration: 0.5, repeat: hoveredSection === index ? Infinity : 0 }
+          <Link href={`/${section.name}`} data-interactive>
+            <div className="group cursor-pointer relative">
+              <span
+                className="block text-lg md:text-xl font-mono font-bold transition-colors duration-200"
+                style={{
+                  color: hoveredSection === index ? section.color : '#ffffff',
+                  textShadow: hoveredSection === index
+                    ? `3px 3px 0px #000000, 0 0 15px ${section.color}`
+                    : '3px 3px 6px rgba(0,0,0,1)',
                 }}
               >
-                {/* Main text that glitches */}
-                <motion.span
-                  className="block text-lg md:text-xl font-mono hover-vibrate transition-colors duration-200 font-bold"
-                  style={{
-                    color: hoveredSection === index ? section.color : '#ffffff',
-                    textShadow: hoveredSection === index
-                      ? `3px 3px 0px #000000, -1px -1px 0px #000000, 0 0 15px ${section.color}`
-                      : '3px 3px 6px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.8)',
-                    filter: hoveredSection === index ? 'blur(0.5px)' : 'none',
-                  }}
-                  animate={{
-                    opacity: hoveredSection === index ? [1, 0.7, 1] : 1,
-                  }}
-                  transition={{ duration: 0.1, repeat: hoveredSection === index ? Infinity : 0 }}
-                >
-                  {hoveredSection === index ? section.altName : section.name}
-                </motion.span>
+                {hoveredSection === index ? section.altName : section.name}
+              </span>
 
-                {/* Description text */}
-                <motion.span
-                  className="block text-sm font-mono mt-2 font-medium"
-                  style={{
-                    color: hoveredSection === index ? section.color : '#cccccc',
-                    textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
-                  }}
-                  animate={{
-                    opacity: hoveredSection === index ? [0.8, 1, 0.8] : 0.7,
-                  }}
-                  transition={{ duration: 0.2, repeat: hoveredSection === index ? Infinity : 0 }}
-                >
-                  {hoveredSection === index ? section.altDescription : section.description}
-                </motion.span>
+              <span
+                className="block text-sm font-mono mt-2 font-medium transition-colors duration-200"
+                style={{
+                  color: hoveredSection === index ? section.color : '#999',
+                  textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                }}
+              >
+                {hoveredSection === index ? section.altDescription : section.description}
+              </span>
 
-                {/* Enhanced pulsing dot */}
-                <motion.div
-                  className="absolute -left-4 top-1/2 w-2 h-2 rounded-full"
-                  style={{
-                    backgroundColor: hoveredSection === index ? section.color : '#00ff41',
-                  }}
-                  animate={{
-                    opacity: [0, 1, 0],
-                    scale: hoveredSection === index ? [0.5, 2, 0.5] : [0.5, 1, 0.5],
-                  }}
-                  transition={{
-                    duration: hoveredSection === index ? 0.3 : 1.5,
-                    repeat: Infinity,
-                    delay: Math.random() * 2,
-                  }}
-                />
-
-                {/* Hover effect particles */}
-                {hoveredSection === index && (
-                  <div className="absolute inset-0 pointer-events-none">
-                    {[...Array(5)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute w-1 h-1 rounded-full"
-                        style={{
-                          backgroundColor: section.color,
-                          left: `${Math.random() * 100}%`,
-                          top: `${Math.random() * 100}%`,
-                        }}
-                        animate={{
-                          opacity: [0, 1, 0],
-                          scale: [0, 1, 0],
-                          x: [0, (Math.random() - 0.5) * 20],
-                          y: [0, (Math.random() - 0.5) * 20],
-                        }}
-                        transition={{
-                          duration: 1,
-                          repeat: Infinity,
-                          delay: i * 0.1,
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
-              </motion.div>
-            </motion.div>
+              {/* Pulsing dot */}
+              <div
+                className="absolute -left-4 top-1/2 w-2 h-2 rounded-full animate-pulse"
+                style={{ backgroundColor: hoveredSection === index ? section.color : '#00ff41' }}
+              />
+            </div>
           </Link>
-        </motion.div>
+        </div>
       ))}
-
-      {/* Background animated elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-white opacity-20"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              opacity: [0.1, 0.3, 0.1],
-              scale: [0.5, 1, 0.5],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-            }}
-          />
-        ))}
-      </div>
 
 
     </div>
