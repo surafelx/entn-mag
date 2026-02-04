@@ -60,9 +60,8 @@ export default function DonatePage() {
           transition={{ duration: 1 }}
         >
           <motion.h1 
-            className="text-5xl md:text-[7rem] font-bold leading-none mb-12"
+            className="text-5xl md:text-[7rem] font-bold leading-none mb-12 font-mono"
             style={{
-              fontFamily: 'Bebas Neue, sans-serif',
               color: '#fff',
               textShadow: '4px 4px 0px #ff0080',
             }}
@@ -145,9 +144,8 @@ export default function DonatePage() {
                         {tier.name}
                       </h3>
                       <span 
-                        className="text-2xl font-bold"
+                        className="text-2xl font-bold font-mono"
                         style={{ 
-                          fontFamily: 'Creepster, cursive',
                           color: tier.color,
                         }}
                       >
@@ -226,9 +224,8 @@ export default function DonatePage() {
       {/* Background decorative elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <motion.div
-          className="absolute text-[20rem] font-bold opacity-[0.02] select-none"
+          className="absolute text-[20rem] font-bold opacity-[0.02] select-none font-mono"
           style={{ 
-            fontFamily: 'Bebas Neue, sans-serif',
             right: '-10%',
             top: '10%',
             transform: 'rotate(90deg)',
@@ -237,9 +234,8 @@ export default function DonatePage() {
           GIVE
         </motion.div>
         <motion.div
-          className="absolute text-[15rem] font-bold opacity-[0.02] select-none"
+          className="absolute text-[15rem] font-bold opacity-[0.02] select-none font-mono"
           style={{ 
-            fontFamily: 'Bebas Neue, sans-serif',
             left: '-5%',
             bottom: '5%',
             transform: 'rotate(-15deg)',

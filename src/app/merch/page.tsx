@@ -147,9 +147,8 @@ export default function MerchPage() {
         animate={{ opacity: 1 }}
       >
         <motion.h1 
-          className="text-6xl md:text-[8rem] font-bold tracking-wider"
+          className="text-6xl md:text-[8rem] font-bold tracking-wider font-mono"
           style={{
-            fontFamily: 'Bebas Neue, sans-serif',
             color: '#fff',
             textShadow: '4px 4px 0px #ff0080, -2px -2px 0px #00ff41',
             transform: 'rotate(-2deg)',
@@ -280,9 +279,8 @@ export default function MerchPage() {
                 {/* Price - handwritten style */}
                 <div className="flex items-center justify-between">
                   <motion.span 
-                    className="text-2xl font-bold"
+                    className="text-2xl font-bold font-mono"
                     style={{ 
-                      fontFamily: 'Creepster, cursive',
                       color: item.color,
                       textShadow: '1px 1px 0px #000',
                     }}
