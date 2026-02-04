@@ -1,13 +1,32 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+
+const sections = [
+  '/',
+  '/glitch',
+  '/skin',
+  '/mouthfeel',
+  '/no-signal',
+  '/louder',
+  '/eyes-only',
+  '/right-now',
+  '/brain-dump',
+  '/humans',
+  '/merch',
+  '/donate',
+];
 
 export function KeyboardNavigation() {
   const router = useRouter();
+  const pathname = usePathname();
+  const [showHint, setShowHint] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      const currentIndex = sections.indexOf(pathname);
+      
       // Prevent default behavior for navigation keys
       if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
         e.preventDefault();
@@ -15,20 +34,22 @@ export function KeyboardNavigation() {
 
       switch (e.key) {
         case 'ArrowLeft':
-          // Navigate to previous page/section
-          window.dispatchEvent(new CustomEvent('navigate', { detail: { direction: 'left' } }));
+        case 'ArrowUp':
+          // Navigate to previous section
+          if (currentIndex > 0) {
+            router.push(sections[currentIndex - 1]);
+          } else {
+            router.push(sections[sections.length - 1]);
+          }
           break;
         case 'ArrowRight':
-          // Navigate to next page/section
-          window.dispatchEvent(new CustomEvent('navigate', { detail: { direction: 'right' } }));
-          break;
-        case 'ArrowUp':
-          // Navigate up within section
-          window.dispatchEvent(new CustomEvent('navigate', { detail: { direction: 'up' } }));
-          break;
         case 'ArrowDown':
-          // Navigate down within section
-          window.dispatchEvent(new CustomEvent('navigate', { detail: { direction: 'down' } }));
+          // Navigate to next section
+          if (currentIndex < sections.length - 1) {
+            router.push(sections[currentIndex + 1]);
+          } else {
+            router.push(sections[0]);
+          }
           break;
         case 'Escape':
           // Return to home
@@ -39,12 +60,22 @@ export function KeyboardNavigation() {
           e.preventDefault();
           window.dispatchEvent(new CustomEvent('space-action'));
           break;
+        case '?':
+          // Show keyboard hints
+          setShowHint(prev => !prev);
+          break;
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [router]);
+  }, [router, pathname]);
 
-  return null; // This component doesn't render anything visible
+  // Show hint briefly on mount
+  useEffect(() => {
+    const timeout = setTimeout(() => setShowHint(false), 3000);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  return null;
 }
