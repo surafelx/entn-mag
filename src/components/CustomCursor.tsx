@@ -1,53 +1,56 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
 export function CustomCursor() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const cursorRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
+    const cursor = cursorRef.current;
+    if (!cursor) return;
+
+    // Use direct DOM manipulation for smooth cursor - no React re-renders
     const updateMousePosition = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      cursor.style.transform = `translate3d(${e.clientX - 10}px, ${e.clientY - 10}px, 0) scale(${isHovering ? 1.5 : 1})`;
     };
 
-    const handleMouseEnter = () => setIsHovering(true);
-    const handleMouseLeave = () => setIsHovering(false);
-
-    // Add event listeners for interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, [data-interactive]');
+    const handleMouseEnter = () => {
+      setIsHovering(true);
+      cursor.style.transform = cursor.style.transform.replace(/scale\([^)]+\)/, 'scale(1.5)');
+    };
     
-    interactiveElements.forEach(el => {
-      el.addEventListener('mouseenter', handleMouseEnter);
-      el.addEventListener('mouseleave', handleMouseLeave);
-    });
+    const handleMouseLeave = () => {
+      setIsHovering(false);
+      cursor.style.transform = cursor.style.transform.replace(/scale\([^)]+\)/, 'scale(1)');
+    };
 
-    window.addEventListener('mousemove', updateMousePosition);
+    // Use MutationObserver to handle dynamically added elements
+    const addListeners = () => {
+      const interactiveElements = document.querySelectorAll('a, button, [data-interactive]');
+      interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', handleMouseEnter);
+        el.addEventListener('mouseleave', handleMouseLeave);
+      });
+      return interactiveElements;
+    };
+
+    const elements = addListeners();
+    window.addEventListener('mousemove', updateMousePosition, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', updateMousePosition);
-      interactiveElements.forEach(el => {
+      elements.forEach(el => {
         el.removeEventListener('mouseenter', handleMouseEnter);
         el.removeEventListener('mouseleave', handleMouseLeave);
       });
     };
-  }, []);
+  }, [isHovering]);
 
   return (
-    <motion.div
+    <div
+      ref={cursorRef}
       className="cursor"
-      animate={{
-        x: mousePosition.x - 10,
-        y: mousePosition.y - 10,
-        scale: isHovering ? 2 : 1,
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 500,
-        damping: 28,
-        mass: 0.5,
-      }}
       style={{
         position: 'fixed',
         width: '20px',
@@ -57,6 +60,10 @@ export function CustomCursor() {
         pointerEvents: 'none',
         zIndex: 9999,
         mixBlendMode: 'difference',
+        willChange: 'transform',
+        transition: 'transform 0.05s ease-out',
+        top: 0,
+        left: 0,
       }}
     />
   );

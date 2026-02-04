@@ -325,18 +325,19 @@ export default function MerchPage() {
         </motion.div>
       </div>
 
-      {/* Footer note */}
-      <motion.div 
-        className="fixed bottom-8 right-8 z-50"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-      >
-        <p className="font-mono text-xs text-white/30 text-right">
-          drag items around<br/>
-          like a real merch table
-        </p>
-      </motion.div>
-    </div>
+        {/* Footer note */}
+        <motion.div 
+          className="fixed bottom-8 right-8 z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+        >
+          <p className="font-mono text-xs text-white/30 text-right">
+            drag items around<br/>
+            like a real merch table
+          </p>
+        </motion.div>
+      </div>
+    </Layout>
   );
 }

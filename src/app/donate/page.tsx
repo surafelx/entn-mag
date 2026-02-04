@@ -2,8 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { Layout } from '@/components/Layout';
 
 const tiers = [
   {
@@ -37,22 +36,11 @@ export default function DonatePage() {
   const [customAmount, setCustomAmount] = useState('');
 
   return (
-    <div className="w-full min-h-screen relative overflow-y-auto overflow-x-hidden bg-black">
-      {/* Full-screen text-focused design */}
-      <div className="min-h-screen flex flex-col justify-center px-8 py-20">
-        {/* Back button */}
-        <Link href="/">
-          <motion.button
-            className="fixed top-6 left-6 z-[70] flex items-center gap-2 text-white hover:text-[#ff0080] transition-colors font-mono text-sm bg-black/80 px-3 py-2 border border-white/30"
-            data-interactive
-            whileHover={{ x: -5 }}
-          >
-            <ArrowLeft size={16} />
-            BACK
-          </motion.button>
-        </Link>
-
-        {/* Main headline */}
+    <Layout>
+      <div className="w-full min-h-screen relative overflow-y-auto overflow-x-hidden">
+        {/* Full-screen text-focused design */}
+        <div className="min-h-screen flex flex-col justify-center px-8 py-20 pt-8">
+          {/* Main headline */}
         <motion.div
           className="max-w-5xl mx-auto"
           initial={{ opacity: 0 }}
@@ -221,29 +209,30 @@ export default function DonatePage() {
         </motion.div>
       </div>
 
-      {/* Background decorative elements */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <motion.div
-          className="absolute text-[20rem] font-bold opacity-[0.02] select-none font-mono"
-          style={{ 
-            right: '-10%',
-            top: '10%',
-            transform: 'rotate(90deg)',
-          }}
-        >
-          GIVE
-        </motion.div>
-        <motion.div
-          className="absolute text-[15rem] font-bold opacity-[0.02] select-none font-mono"
-          style={{ 
-            left: '-5%',
-            bottom: '5%',
-            transform: 'rotate(-15deg)',
-          }}
-        >
-          HELP
-        </motion.div>
+        {/* Background decorative elements */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          <div
+            className="absolute text-[20rem] font-bold opacity-[0.02] select-none font-mono"
+            style={{ 
+              right: '-10%',
+              top: '10%',
+              transform: 'rotate(90deg)',
+            }}
+          >
+            GIVE
+          </div>
+          <div
+            className="absolute text-[15rem] font-bold opacity-[0.02] select-none font-mono"
+            style={{ 
+              left: '-5%',
+              bottom: '5%',
+              transform: 'rotate(-15deg)',
+            }}
+          >
+            HELP
+          </div>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 }
