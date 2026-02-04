@@ -2,8 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { Layout } from '@/components/Layout';
 
 const merchItems = [
   {
@@ -109,38 +108,27 @@ export default function MerchPage() {
   const [draggedPositions, setDraggedPositions] = useState<Record<number, { x: number; y: number }>>({});
 
   return (
-    <div className="w-full min-h-screen relative overflow-y-auto overflow-x-hidden bg-black pb-20">
-      {/* Messy table texture background */}
-      <div className="fixed inset-0 pointer-events-none opacity-10">
-        <div 
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-              repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(255,255,255,0.02) 10px,
-                rgba(255,255,255,0.02) 20px
-              )
-            `,
-          }}
-        />
-      </div>
+    <Layout>
+      <div className="w-full min-h-screen relative overflow-y-auto overflow-x-hidden pb-20">
+        {/* Messy table texture background */}
+        <div className="fixed inset-0 pointer-events-none opacity-10 z-0">
+          <div 
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `
+                repeating-linear-gradient(
+                  45deg,
+                  transparent,
+                  transparent 10px,
+                  rgba(255,255,255,0.02) 10px,
+                  rgba(255,255,255,0.02) 20px
+                )
+              `,
+            }}
+          />
+        </div>
 
-      {/* Back button */}
-      <Link href="/">
-        <motion.button
-          className="fixed top-6 left-6 z-[70] flex items-center gap-2 text-white hover:text-[#ff0080] transition-colors font-mono text-sm bg-black/80 px-3 py-2 border border-white/30"
-          data-interactive
-          whileHover={{ x: -5 }}
-        >
-          <ArrowLeft size={16} />
-          BACK
-        </motion.button>
-      </Link>
-
-      {/* Header */}
+        {/* Header */}
       <motion.div 
         className="pt-24 px-8 mb-8"
         initial={{ opacity: 0 }}
