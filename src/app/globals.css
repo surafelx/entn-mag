@@ -106,57 +106,9 @@ body::after {
   overflow: hidden;
 }
 
-/* Experimental typography classes */
+/* Typography */
 .text-glitch {
-  position: relative;
   font-family: 'JetBrains Mono', monospace;
-  animation: glitch 2s infinite;
-}
-
-.text-glitch::before,
-.text-glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.text-glitch::before {
-  animation: glitch-1 0.5s infinite;
-  color: var(--accent);
-  z-index: -1;
-}
-
-.text-glitch::after {
-  animation: glitch-2 0.5s infinite;
-  color: var(--glitch);
-  z-index: -2;
-}
-
-@keyframes glitch {
-  0%, 100% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
-}
-
-@keyframes glitch-1 {
-  0%, 100% { transform: translate(0); }
-  20% { transform: translate(-1px, 1px); }
-  40% { transform: translate(-1px, -1px); }
-  60% { transform: translate(1px, 1px); }
-  80% { transform: translate(1px, -1px); }
-}
-
-@keyframes glitch-2 {
-  0%, 100% { transform: translate(0); }
-  20% { transform: translate(1px, -1px); }
-  40% { transform: translate(1px, 1px); }
-  60% { transform: translate(-1px, -1px); }
-  80% { transform: translate(-1px, 1px); }
 }
 
 .text-distorted {
@@ -177,60 +129,19 @@ body::after {
 }
 
 /* Hover effects */
-.hover-vibrate:hover {
-  animation: vibrate 0.1s infinite;
-}
-
-@keyframes vibrate {
-  0% { transform: translate(0); }
-  25% { transform: translate(1px, -1px); }
-  50% { transform: translate(-1px, 1px); }
-  75% { transform: translate(1px, 1px); }
-  100% { transform: translate(-1px, -1px); }
-}
-
-.hover-stretch:hover {
-  transform: scaleX(1.1) scaleY(0.9);
+.hover-scale:hover {
+  transform: scale(1.02);
   transition: transform 0.2s ease;
 }
 
-/* Background effect animations */
-@keyframes glitchPulse {
-  0%, 100% { filter: contrast(1.5) saturate(2) hue-rotate(0deg); }
-  25% { filter: contrast(2) saturate(3) hue-rotate(90deg); }
-  50% { filter: contrast(1.8) saturate(1.5) hue-rotate(180deg); }
-  75% { filter: contrast(2.2) saturate(2.5) hue-rotate(270deg); }
+/* Page transition */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes colorWave {
-  0% { filter: blur(2px) brightness(1.2) hue-rotate(0deg); }
-  33% { filter: blur(4px) brightness(1.5) hue-rotate(120deg); }
-  66% { filter: blur(1px) brightness(1.8) hue-rotate(240deg); }
-  100% { filter: blur(2px) brightness(1.2) hue-rotate(360deg); }
-}
-
-@keyframes mapShift {
-  0% { filter: blur(40px) hue-rotate(45deg) saturate(1); }
-  50% { filter: blur(60px) hue-rotate(135deg) saturate(1.5); }
-  100% { filter: blur(40px) hue-rotate(225deg) saturate(1); }
-}
-
-@keyframes vinylSpin {
-  0% { filter: blur(20px) saturate(1.5) hue-rotate(0deg); }
-  100% { filter: blur(20px) saturate(1.5) hue-rotate(360deg); }
-}
-
-@keyframes textChaos {
-  0% { filter: contrast(2) brightness(0.8) skew(0deg); }
-  25% { filter: contrast(2.5) brightness(0.6) skew(2deg); }
-  50% { filter: contrast(1.8) brightness(1) skew(-2deg); }
-  75% { filter: contrast(2.2) brightness(0.7) skew(1deg); }
-  100% { filter: contrast(2) brightness(0.8) skew(0deg); }
-}
-
-@keyframes defaultPulse {
-  0%, 100% { filter: blur(60px) saturate(1.5) brightness(1); }
-  50% { filter: blur(80px) saturate(2) brightness(1.2); }
+.page-enter {
+  animation: pageEnter 0.4s ease-out;
 }
 
 /* Floating background animations - CSS only for performance */

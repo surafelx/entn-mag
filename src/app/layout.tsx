@@ -4,6 +4,7 @@ import { CustomCursor } from "@/components/CustomCursor";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { KeyboardNavigation } from "@/components/KeyboardNavigation";
 import { HoverProvider } from "@/contexts/HoverContext";
+import { PageTransition } from "@/components/PageTransition";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -48,7 +49,9 @@ export default function RootLayout({
         <KeyboardNavigation />
         <HoverProvider>
           <main className="page-container">
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </main>
         </HoverProvider>
       </body>
