@@ -24,18 +24,18 @@ function makeGrid() {
 export function BreakcoreSection() {
   const [grid, setGrid] = useState(makeGrid());
   const [bpm, setBpm] = useState(180);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
   const [step, setStep] = useState(-1);
   const [glitch, setGlitch] = useState(false);
   const stepRef = useRef(-1);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const i = setInterval(() => {
       setGlitch(true);
       setTimeout(() => setGlitch(false), 80);
     }, 6000 + Math.random() * 3000);
-    return () => clearInterval(interval);
+    return () => clearInterval(i);
   }, []);
 
   useEffect(() => {
@@ -53,81 +53,77 @@ export function BreakcoreSection() {
     setGrid(prev => prev.map((row, ri) => row.map((cell, ci) => ri === r && ci === c ? !cell : cell)));
   };
 
+  const randomize = () => {
+    setGrid(Array.from({ length: ROWS }, () =>
+      Array.from({ length: COLS }, () => Math.random() > 0.6)
+    ));
+  };
+
   return (
-    <div className="w-full h-full relative overflow-hidden bg-black">
+    <div className="fixed inset-0 bg-black overflow-hidden flex flex-col items-center justify-center">
       <Link href="/">
         <motion.button
-          className="absolute top-6 left-6 z-50 flex items-center gap-2 text-white hover:text-[#66ff00] transition-colors font-mono text-sm"
-          data-interactive
-          whileHover={{ x: -5 }}
+          className="fixed top-6 left-6 z-[150] flex items-center gap-2 text-white hover:text-[#66ff00] transition-colors font-mono text-sm bg-black/90 px-3 py-2 border border-white/20"
+          data-interactive whileHover={{ x: -5 }}
         >
-          <ArrowLeft size={16} />
-          BACK
+          <ArrowLeft size={16} /> BACK
         </motion.button>
       </Link>
 
-      <motion.div
-        className="absolute top-6 left-1/2 transform -translate-x-1/2 z-40"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+      <motion.h1
+        className="fixed top-6 left-1/2 -translate-x-1/2 z-[140] text-3xl font-bold font-mono tracking-wider"
+        style={{ color: glitch ? '#ff0080' : '#66ff00', textShadow: glitch ? '3px 0 0 #ff0080, -3px 0 0 #ffff00' : 'none' }}
+        initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}
       >
-        <h1
-          className="text-4xl font-bold tracking-wider font-mono"
-          style={{
-            color: glitch ? '#ff0080' : '#66ff00',
-            textShadow: glitch ? '3px 0px 0px #ff0080, -3px 0px 0px #ffff00' : 'none',
-          }}
-        >
-          BREAK<span className="text-white">CORE</span>
-        </h1>
-      </motion.div>
+        BREAK<span className="text-white">CORE</span>
+      </motion.h1>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-8 pt-16">
-        {/* BPM display */}
-        <div className="flex items-center gap-4">
-          <motion.span
-            className="font-mono text-5xl font-bold"
-            style={{ color: '#66ff00' }}
-            animate={{ scale: playing ? [1, 1.05, 1] : 1 }}
-            transition={{ duration: 60 / bpm, repeat: Infinity }}
+      <div className="flex flex-col items-center gap-8 w-full px-8">
+        {/* BPM + beat indicator */}
+        <div className="flex items-center gap-6">
+          <motion.div className="font-mono font-black"
+            style={{ fontSize: 'clamp(3rem, 8vw, 5rem)', color: '#66ff00', lineHeight: 1 }}
+            animate={{ scale: playing && step % 4 === 0 ? [1, 1.06, 1] : 1 }}
+            transition={{ duration: 0.1 }}
           >
             {bpm}
-          </motion.span>
-          <span className="font-mono text-sm text-white/50">BPM</span>
-          <input
-            type="range"
-            min={80}
-            max={300}
-            value={bpm}
-            onChange={e => setBpm(Number(e.target.value))}
-            className="w-32 accent-[#66ff00]"
-            data-interactive
-          />
+          </motion.div>
+          <div className="space-y-1">
+            <div className="font-mono text-xs text-white/40">BPM</div>
+            <input type="range" min={80} max={300} value={bpm}
+              onChange={e => setBpm(Number(e.target.value))}
+              className="w-28 accent-[#66ff00]" data-interactive />
+          </div>
+
+          {/* Beat lights */}
+          <div className="flex gap-1.5">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <motion.div key={i} className="w-4 h-4 rounded-full border border-[#66ff00]/40"
+                animate={{ backgroundColor: playing && Math.floor(step / 4) === i ? '#66ff00' : 'transparent' }}
+                transition={{ duration: 0.05 }}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Step grid */}
         <div className="flex flex-col gap-2">
           {grid.map((row, r) => (
             <div key={r} className="flex items-center gap-2">
-              <span
-                className="font-mono text-xs w-12 text-right"
-                style={{ color: COLORS[r] }}
-              >
+              <span className="font-mono text-xs w-14 text-right" style={{ color: COLORS[r] }}>
                 {ROW_LABELS[r]}
               </span>
               <div className="flex gap-1">
                 {row.map((active, c) => {
-                  const isCurrentStep = c === step;
+                  const isStep = c === step;
+                  const isBar = c % 4 === 0;
                   return (
-                    <motion.button
-                      key={c}
+                    <motion.button key={c}
                       className="w-8 h-8 border transition-none"
                       style={{
-                        backgroundColor: active
-                          ? isCurrentStep ? '#ffffff' : COLORS[r]
-                          : isCurrentStep ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.05)',
-                        borderColor: active ? COLORS[r] : 'rgba(255,255,255,0.15)',
-                        boxShadow: active && isCurrentStep ? `0 0 12px ${COLORS[r]}` : 'none',
+                        backgroundColor: active ? (isStep ? '#ffffff' : COLORS[r]) : isStep ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.04)',
+                        borderColor: isBar ? `${COLORS[r]}60` : 'rgba(255,255,255,0.1)',
+                        boxShadow: active && isStep ? `0 0 10px ${COLORS[r]}` : 'none',
                       }}
                       onClick={() => toggleCell(r, c)}
                       whileTap={{ scale: 0.85 }}
@@ -141,39 +137,39 @@ export function BreakcoreSection() {
         </div>
 
         {/* Controls */}
-        <div className="flex gap-4">
+        <div className="flex gap-3">
           <motion.button
-            className="px-8 py-3 border-2 font-mono text-sm font-bold transition-colors"
+            className="px-8 py-3 border-2 font-mono text-sm font-bold"
             style={{
               borderColor: playing ? '#ff0080' : '#66ff00',
               color: playing ? '#ff0080' : '#66ff00',
-              boxShadow: playing ? '0 0 20px rgba(255,0,128,0.3)' : '0 0 20px rgba(102,255,0,0.3)',
+              boxShadow: playing ? '0 0 20px rgba(255,0,128,0.2)' : '0 0 20px rgba(102,255,0,0.2)',
             }}
             onClick={() => setPlaying(p => !p)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            data-interactive
+            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} data-interactive
           >
-            {playing ? '■ STOP' : '▶ SHATTER'}
+            {playing ? '■ KILL' : '▶ SHATTER'}
           </motion.button>
-
           <motion.button
-            className="px-6 py-3 border border-white/30 font-mono text-xs text-white/60 hover:text-white hover:border-white/60"
-            onClick={() => setGrid(makeGrid())}
-            whileTap={{ scale: 0.95 }}
-            data-interactive
+            className="px-5 py-3 border border-white/20 font-mono text-xs text-white/50 hover:text-white hover:border-white/50"
+            onClick={randomize} whileTap={{ scale: 0.95 }} data-interactive
           >
             RANDOMIZE
+          </motion.button>
+          <motion.button
+            className="px-5 py-3 border border-white/20 font-mono text-xs text-white/50 hover:text-white hover:border-white/50"
+            onClick={() => setGrid(makeGrid())} whileTap={{ scale: 0.95 }} data-interactive
+          >
+            RESET
           </motion.button>
         </div>
       </div>
 
-      <motion.div
-        className="absolute bottom-6 left-6 font-mono text-[#66ff00] text-xs"
-        animate={{ opacity: [0.4, 1, 0.4] }}
+      <motion.div className="fixed bottom-6 left-6 font-mono text-[#66ff00] text-xs"
+        animate={{ opacity: playing ? [0.4, 1, 0.4] : 0.4 }}
         transition={{ duration: 60 / bpm, repeat: Infinity }}
       >
-        {playing ? `RHYTHM SHATTERING @ ${bpm}BPM` : 'TEMPO.EXE PAUSED'}
+        {playing ? `RHYTHM SHATTERING @ ${bpm} BPM` : 'TEMPO.EXE PAUSED — CLICK SHATTER'}
       </motion.div>
     </div>
   );

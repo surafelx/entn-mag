@@ -5,153 +5,139 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
-const feedLines = [
-  '> SIGNAL DETECTED FROM SECTOR 7G',
-  '> TRANSMISSION ORIGIN: UNKNOWN',
-  '> [RAW] underground frequency rising — 3.2khz static wall',
-  '> ERROR: context.dll not found',
-  '> [NOISE] bootleg tape surfaces in eastern bloc',
-  '> WARNING: memory buffer overflow at 0xFF',
-  '> [FEED] artist collective dismantles surveillance node',
-  '> PING: 999ms — packet loss 47%',
-  '> [RAW] sound system seizure — unscheduled broadcast',
-  '> KERNEL PANIC: too much signal, not enough channel',
-  '> [DATA] city grid powers off — people dance anyway',
-  '> ALERT: digital decay spreading to sector 4',
-  '> [WIRE] zine distribution network goes dark momentarily',
-  '> STATUS: ALIVE / BROADCASTING / UNFILTERED',
-  '> [RAW] voice memo found: "they cant stop the signal"',
-  '> TRACE COMPLETE: destination = void',
-  '> [FEED] collective memory corrupted — regenerating',
-  '> WARNING: beautiful interference on all channels',
-  '> [NOISE] frequency jam detected — source: everywhere',
-  '> END OF TRANSMISSION... or is it',
+type FeedLine = { text: string; type: string };
+
+const allLines: FeedLine[] = [
+  { type: 'MUSIC', text: 'new cassette out of nairobi — no label, no barcode, 50 copies. already gone.' },
+  { type: 'SIGNAL', text: 'pirate station 104.7 broadcasting from building roof. playlist: unknown. duration: indefinite.' },
+  { type: 'FILM', text: 'super-8 reel recovered from demolition site. 12 minutes. content: raw.' },
+  { type: 'ERROR', text: 'DISTRIBUTION.EXE has stopped working — route packets manually' },
+  { type: 'TEXT', text: 'photocopied manifesto found under door. 3 pages. no author. 47 demands.' },
+  { type: 'MUSIC', text: 'sound system seizure on transit line 9 — 4 minutes of unscheduled noise.' },
+  { type: 'EVENT', text: 'venue address distributed by word of mouth only. capacity: unknown. start time: now.' },
+  { type: 'SIGNAL', text: 'frequency drift detected on 88.3 MHz — source unregistered, signal strong' },
+  { type: 'FILM', text: 'vhs tape left at 3 locations simultaneously. tape length: 2hrs. content: silent.' },
+  { type: 'ERROR', text: 'PLATFORM.dll could not be loaded — continuing without platform' },
+  { type: 'TEXT', text: 'underground paper issue 47 — 2000 copies. print quality: deliberately bad.' },
+  { type: 'MUSIC', text: 'field recording from protest. 38 minutes. unedited. no masters. released.' },
+  { type: 'EVENT', text: 'collective occupation of unused broadcast tower — signal transmitted for 6 hours.' },
+  { type: 'SIGNAL', text: 'data packet intercepted: origin encrypted. contents: frequencies. destination: everywhere.' },
+  { type: 'FILM', text: 'found footage screening in parking structure. projector: borrowed. license: none.' },
+  { type: 'ERROR', text: 'WARNING: memory allocated for silence overflowing' },
+  { type: 'MUSIC', text: 'vinyl pressing of rehearsal tape — 100 copies, mislabeled by design.' },
+  { type: 'TEXT', text: 'zine distribution network spanning 14 cities. zero infrastructure. all human.' },
+  { type: 'EVENT', text: 'show announced 2 hours ago — 300 people. venue: building exterior.' },
+  { type: 'SIGNAL', text: 'transmission received. origin: garage. duration: ongoing. authority: none.' },
 ];
 
+const typeColors: Record<string, string> = {
+  MUSIC: '#00ff41',
+  SIGNAL: '#00ffff',
+  FILM: '#ff6600',
+  ERROR: '#ff0080',
+  TEXT: '#ffff00',
+  EVENT: '#9966ff',
+};
+
 export function RawFeedSection() {
-  const [visibleLines, setVisibleLines] = useState<string[]>([]);
+  const [lines, setLines] = useState<(FeedLine & { id: number })[]>([]);
   const [cursor, setCursor] = useState(true);
   const [glitch, setGlitch] = useState(false);
+  const [signal, setSignal] = useState(72);
+  const idxRef = useRef(0);
+  const counterRef = useRef(0);
   const feedRef = useRef<HTMLDivElement>(null);
-  const lineIndex = useRef(0);
 
   useEffect(() => {
-    const cursorInterval = setInterval(() => setCursor(c => !c), 500);
-    return () => clearInterval(cursorInterval);
+    const ci = setInterval(() => setCursor(c => !c), 500);
+    return () => clearInterval(ci);
   }, []);
 
   useEffect(() => {
-    const glitchInterval = setInterval(() => {
+    const gi = setInterval(() => {
       setGlitch(true);
+      setSignal(Math.floor(40 + Math.random() * 60));
       setTimeout(() => setGlitch(false), 120);
     }, 4000 + Math.random() * 3000);
-    return () => clearInterval(glitchInterval);
+    return () => clearInterval(gi);
   }, []);
 
   useEffect(() => {
-    const addLine = setInterval(() => {
-      const line = feedLines[lineIndex.current % feedLines.length];
-      lineIndex.current += 1;
-      setVisibleLines(prev => [...prev.slice(-30), line]);
-      if (feedRef.current) {
-        feedRef.current.scrollTop = feedRef.current.scrollHeight;
-      }
-    }, 800);
-    return () => clearInterval(addLine);
+    const timer = setInterval(() => {
+      const line = allLines[idxRef.current % allLines.length];
+      idxRef.current++;
+      counterRef.current++;
+      setLines(prev => {
+        const next = [...prev, { ...line, id: counterRef.current }];
+        return next.slice(-22);
+      });
+      if (feedRef.current) feedRef.current.scrollTop = feedRef.current.scrollHeight;
+    }, 900);
+    return () => clearInterval(timer);
   }, []);
 
-  const getLineColor = (line: string) => {
-    if (line.startsWith('> ERROR') || line.startsWith('> KERNEL') || line.startsWith('> ALERT')) return '#ff0080';
-    if (line.startsWith('> WARNING')) return '#ffff00';
-    if (line.startsWith('> [RAW]')) return '#00ffff';
-    if (line.startsWith('> [NOISE]')) return '#ff6600';
-    if (line.startsWith('> STATUS')) return '#00ff41';
-    return '#cccccc';
-  };
-
   return (
-    <div className="w-full h-full relative overflow-hidden bg-black">
+    <div className="fixed inset-0 bg-black overflow-hidden flex flex-col">
       <Link href="/">
         <motion.button
-          className="absolute top-6 left-6 z-50 flex items-center gap-2 text-white hover:text-[#00ffff] transition-colors font-mono text-sm"
-          data-interactive
-          whileHover={{ x: -5 }}
+          className="fixed top-6 left-6 z-[150] flex items-center gap-2 text-white hover:text-[#00ffff] transition-colors font-mono text-sm bg-black/90 px-3 py-2 border border-white/20"
+          data-interactive whileHover={{ x: -5 }}
         >
-          <ArrowLeft size={16} />
-          BACK
+          <ArrowLeft size={16} /> BACK
         </motion.button>
       </Link>
 
-      <motion.div
-        className="absolute top-6 left-1/2 transform -translate-x-1/2 z-40"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <h1
-          className="text-4xl font-bold tracking-wider font-mono"
-          style={{
-            color: glitch ? '#ff0080' : '#00ffff',
-            textShadow: glitch ? '3px 0px 0px #ff0080, -3px 0px 0px #00ff41' : 'none',
-          }}
-        >
+      {/* Header bar */}
+      <div className="flex-none h-16 border-b border-[#00ffff]/20 flex items-center justify-between px-8 pt-1">
+        <div className="font-mono text-lg font-bold" style={{ color: glitch ? '#ff0080' : '#00ffff' }}>
           RAW<span className="text-white">FEED</span>
-        </h1>
-      </motion.div>
+        </div>
 
-      {/* Signal strength bars */}
-      <div className="absolute top-6 right-6 flex items-end gap-1 z-40">
-        {[3, 6, 9, 12, 8, 4, 10, 7].map((h, i) => (
-          <motion.div
-            key={i}
-            className="w-2 bg-[#00ffff]"
-            style={{ height: h * 2 }}
-            animate={{ height: [h * 2, h * 2 * (0.5 + Math.random()), h * 2] }}
-            transition={{ duration: 0.4, repeat: Infinity, delay: i * 0.05 }}
-          />
-        ))}
-      </div>
+        {/* Signal strength */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-end gap-px h-5">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="w-1.5 transition-all"
+                style={{ height: `${(i + 1) * 12.5}%`, backgroundColor: signal > i * 12 ? '#00ffff' : 'rgba(0,255,255,0.15)' }} />
+            ))}
+          </div>
+          <span className="font-mono text-xs text-[#00ffff]">{signal}%</span>
+          <motion.span className="font-mono text-xs text-[#00ff41]"
+            animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.5, repeat: Infinity }}>
+            ● LIVE
+          </motion.span>
+        </div>
 
-      {/* Terminal feed */}
-      <div className="absolute inset-0 pt-20 pb-16 px-8">
-        <div
-          ref={feedRef}
-          className="h-full overflow-hidden font-mono text-sm leading-7"
-          style={{ filter: glitch ? 'blur(1px)' : 'none' }}
-        >
-          {visibleLines.map((line, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3 }}
-              style={{ color: getLineColor(line) }}
-            >
-              {line}
-            </motion.div>
+        {/* Category legend */}
+        <div className="flex gap-4">
+          {Object.entries(typeColors).map(([type, color]) => (
+            <span key={type} className="font-mono text-xs" style={{ color }}>[{type}]</span>
           ))}
-          <span style={{ color: '#00ffff' }}>{cursor ? '█' : ' '}</span>
         </div>
       </div>
 
-      {/* CRT scan line */}
-      <motion.div
-        className="absolute w-full h-px pointer-events-none"
-        style={{ background: 'rgba(0,255,255,0.15)' }}
-        animate={{ y: ['0vh', '100vh'] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-      />
+      {/* Feed */}
+      <div ref={feedRef} className="flex-1 overflow-hidden px-8 py-4 space-y-2">
+        {lines.map((line) => (
+          <motion.div key={line.id}
+            className="flex items-start gap-3 font-mono text-sm leading-relaxed"
+            initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}
+            style={{ filter: glitch && Math.random() > 0.7 ? 'blur(1px)' : 'none' }}
+          >
+            <span className="flex-none text-xs pt-0.5 font-bold"
+              style={{ color: typeColors[line.type] }}>[{line.type}]</span>
+            <span className="text-white/80">{line.text}</span>
+          </motion.div>
+        ))}
+        <span className="text-[#00ffff] font-mono">{cursor ? '█' : ' '}</span>
+      </div>
 
       {/* Status bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-10 border-t border-[#00ffff]/30 flex items-center px-8 gap-8">
-        <motion.span
-          className="font-mono text-xs text-[#00ff41]"
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        >
-          ● LIVE
-        </motion.span>
-        <span className="font-mono text-xs text-[#00ffff]/60">UNFILTERED TRANSMISSION</span>
-        <span className="font-mono text-xs text-white/30 ml-auto">LINES: {visibleLines.length}</span>
+      <div className="flex-none h-9 border-t border-[#00ffff]/20 flex items-center px-8 gap-6 font-mono text-xs text-white/30">
+        <span>LINES RECEIVED: {counterRef.current}</span>
+        <span>FILTER: NONE</span>
+        <span>ENCRYPTION: OFF</span>
+        <span className="ml-auto">UNFILTERED TRANSMISSION / ENTN WIRE</span>
       </div>
     </div>
   );

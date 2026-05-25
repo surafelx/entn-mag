@@ -72,10 +72,10 @@ export function DonateSection() {
   };
 
   return (
-    <div className="w-full h-full relative overflow-hidden bg-black overflow-y-auto">
+    <div className="fixed inset-0 bg-black overflow-y-auto">
       <Link href="/">
         <motion.button
-          className="fixed top-6 left-6 z-50 flex items-center gap-2 text-white hover:text-[#ff0080] transition-colors font-mono text-sm bg-black/80 px-3 py-2 border border-white/20"
+          className="fixed top-6 left-6 z-[150] flex items-center gap-2 text-white hover:text-[#ff0080] transition-colors font-mono text-sm bg-black/80 px-3 py-2 border border-white/20"
           data-interactive
           whileHover={{ x: -5 }}
         >

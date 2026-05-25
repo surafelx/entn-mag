@@ -1,143 +1,171 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
-const scraps = [
-  { id: 1, text: 'CUT HERE', color: '#9900ff', rotation: -12, x: 10, y: 15, size: 'text-2xl' },
-  { id: 2, text: 'PASTE OVER REALITY', color: '#ff0080', rotation: 7, x: 55, y: 8, size: 'text-sm' },
-  { id: 3, text: '★★★★', color: '#ffff00', rotation: -3, x: 30, y: 35, size: 'text-4xl' },
-  { id: 4, text: 'TORN ARCHIVE VOL. 7', color: '#ffffff', rotation: 15, x: 65, y: 30, size: 'text-xs' },
-  { id: 5, text: 'DO NOT FOLD', color: '#00ff41', rotation: -20, x: 5, y: 55, size: 'text-lg' },
-  { id: 6, text: '░░░░░░░', color: '#9900ff', rotation: 5, x: 40, y: 60, size: 'text-3xl' },
-  { id: 7, text: 'MEMORY.ZIP', color: '#ff6600', rotation: -8, x: 75, y: 55, size: 'text-sm' },
-  { id: 8, text: 'FRAGMENTED', color: '#00ffff', rotation: 12, x: 20, y: 75, size: 'text-xl' },
-  { id: 9, text: '— clipped from nowhere', color: '#ffffff', rotation: -5, x: 50, y: 80, size: 'text-xs' },
-  { id: 10, text: '▓▒░ CORRUPTED ░▒▓', color: '#ff0080', rotation: 18, x: 80, y: 75, size: 'text-sm' },
+const zines = [
+  {
+    id: 1, issue: '#28', title: 'STATIC BODIES', tag: 'BODY / NOISE',
+    year: '2019', pages: '44pp', color: '#ff0080', rotation: -8, x: 8, y: 18,
+    excerpt: 'documentation of flesh as broadcast medium. risograph. screaming in a format.',
+  },
+  {
+    id: 2, issue: '#31', title: 'DEAD FREQUENCIES', tag: 'RADIO / VOID',
+    year: '2020', pages: '28pp', color: '#00ff41', rotation: 12, x: 62, y: 10,
+    excerpt: 'pirate transmission logs. blank tape enclosed. nothing recorded. everything said.',
+  },
+  {
+    id: 3, issue: '#33', title: 'RAW MATERIAL', tag: 'LABOR / DECAY',
+    year: '2021', pages: '64pp', color: '#ffff00', rotation: -4, x: 32, y: 55,
+    excerpt: 'factory floor interviews. xerox masters. ink bleeding through every page.',
+  },
+  {
+    id: 4, issue: '#35', title: 'TORN SIGNAL', tag: 'PROTEST / TRANSMISSION',
+    year: '2022', pages: '36pp', color: '#9900ff', rotation: 16, x: 72, y: 52,
+    excerpt: 'what the algorithm wouldn\'t distribute. printed at 3am. distributed by hand.',
+  },
+  {
+    id: 5, issue: '#37', title: 'BASEMENT TAPES', tag: 'MUSIC / MEMORY',
+    year: '2023', pages: '52pp', color: '#00ffff', rotation: -14, x: 18, y: 70,
+    excerpt: 'unofficial recordings of unofficial acts. liner notes for music that never existed.',
+  },
+  {
+    id: 6, issue: '#04', title: 'RAW', tag: 'CURRENT ISSUE',
+    year: '2025', pages: '32pp', color: '#ff6600', rotation: 6, x: 52, y: 72,
+    excerpt: 'you are reading it. or you will be. the signal finds its receiver.',
+  },
 ];
 
 export function ScrapFileSection() {
-  const [glitchActive, setGlitchActive] = useState(false);
-  const [hoveredScrap, setHoveredScrap] = useState<number | null>(null);
+  const [hovered, setHovered] = useState<number | null>(null);
+  const [opened, setOpened] = useState<number | null>(null);
+  const [glitch, setGlitch] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setGlitchActive(true);
-      setTimeout(() => setGlitchActive(false), 150);
-    }, 3500 + Math.random() * 2000);
-    return () => clearInterval(interval);
+    const i = setInterval(() => {
+      setGlitch(true);
+      setTimeout(() => setGlitch(false), 120);
+    }, 5000 + Math.random() * 4000);
+    return () => clearInterval(i);
   }, []);
 
+  const openedZine = zines.find(z => z.id === opened);
+
   return (
-    <div className="w-full h-full relative overflow-hidden bg-black">
+    <div className="fixed inset-0 bg-black overflow-hidden">
       <Link href="/">
         <motion.button
-          className="absolute top-6 left-6 z-50 flex items-center gap-2 text-white hover:text-[#9900ff] transition-colors font-mono text-sm"
-          data-interactive
-          whileHover={{ x: -5 }}
+          className="fixed top-6 left-6 z-[150] flex items-center gap-2 text-white hover:text-[#9900ff] transition-colors font-mono text-sm bg-black/90 px-3 py-2 border border-white/20"
+          data-interactive whileHover={{ x: -5 }}
         >
-          <ArrowLeft size={16} />
-          BACK
+          <ArrowLeft size={16} /> BACK
         </motion.button>
       </Link>
 
       <motion.div
-        className="absolute top-6 left-1/2 transform -translate-x-1/2 z-40"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        className="fixed top-6 left-1/2 -translate-x-1/2 z-[140] text-center"
+        initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}
       >
-        <h1
-          className="text-4xl font-bold tracking-wider font-mono"
-          style={{
-            color: glitchActive ? '#ff0080' : '#9900ff',
-            textShadow: glitchActive ? '2px 2px 0px #00ff41, -2px -2px 0px #ffff00' : 'none',
-          }}
-        >
+        <h1 className="text-3xl font-bold font-mono tracking-wider"
+          style={{ color: glitch ? '#ff0080' : '#9900ff', textShadow: glitch ? '2px 0 0 #ff0080, -2px 0 0 #00ff41' : 'none' }}>
           SCRAP<span className="text-white">FILE</span>
         </h1>
+        <p className="font-mono text-xs text-white/30 mt-1">underground zine archive — click to read</p>
       </motion.div>
 
-      {/* Torn paper background texture */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none"
-        style={{
-          backgroundImage: `repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(153,0,255,0.3) 29px),
-            repeating-linear-gradient(90deg, transparent, transparent 28px, rgba(153,0,255,0.1) 29px)`,
-        }}
-      />
-
-      {/* Scattered scraps */}
-      {scraps.map((scrap) => (
+      {/* Scattered zines */}
+      {zines.map((z, i) => (
         <motion.div
-          key={scrap.id}
-          className={`absolute font-mono font-bold cursor-pointer ${scrap.size}`}
-          style={{
-            left: `${scrap.x}%`,
-            top: `${scrap.y}%`,
-            color: scrap.color,
-            rotate: scrap.rotation,
-          }}
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{
-            opacity: hoveredScrap === scrap.id ? 1 : 0.7,
-            scale: hoveredScrap === scrap.id ? 1.2 : 1,
-            y: [0, -4, 0],
-          }}
-          transition={{
-            opacity: { duration: 0.2 },
-            scale: { duration: 0.2 },
-            y: { duration: 3 + scrap.id * 0.3, repeat: Infinity, ease: 'easeInOut', delay: scrap.id * 0.2 },
-          }}
-          whileTap={{ scale: 0.9, rotate: scrap.rotation + 20 }}
-          onMouseEnter={() => setHoveredScrap(scrap.id)}
-          onMouseLeave={() => setHoveredScrap(null)}
+          key={z.id}
+          className="fixed cursor-pointer"
+          style={{ left: `${z.x}%`, top: `${z.y}%`, zIndex: hovered === z.id ? 90 : 50 + i }}
+          initial={{ opacity: 0, scale: 0.7 }}
+          animate={{ opacity: 1, scale: hovered === z.id ? 1.15 : 1, rotate: z.rotation }}
+          transition={{ delay: i * 0.1, duration: 0.5 }}
+          onMouseEnter={() => setHovered(z.id)}
+          onMouseLeave={() => setHovered(null)}
+          onClick={() => setOpened(z.id)}
           data-interactive
         >
-          <span
-            style={{
-              textShadow: hoveredScrap === scrap.id
-                ? `2px 2px 0px rgba(0,0,0,0.8), 0 0 12px ${scrap.color}`
-                : '1px 1px 0px rgba(0,0,0,0.8)',
-              textDecoration: scrap.id % 3 === 0 ? 'line-through' : 'none',
-            }}
-          >
-            {scrap.text}
-          </span>
+          {/* Zine card */}
+          <div className="w-36 shadow-2xl" style={{ boxShadow: hovered === z.id ? `0 0 30px ${z.color}60` : undefined }}>
+            {/* Cover */}
+            <div className="h-48 flex flex-col justify-between p-3 border-2"
+              style={{ backgroundColor: `${z.color}18`, borderColor: z.color }}>
+              <div>
+                <div className="font-mono text-xs font-bold" style={{ color: z.color }}>{z.tag}</div>
+                <div className="font-mono text-xs text-white/40 mt-1">ENTN {z.issue}</div>
+              </div>
+              <div>
+                <div className="font-mono text-lg font-black text-white leading-tight">{z.title}</div>
+              </div>
+              <div className="flex justify-between font-mono text-xs text-white/30">
+                <span>{z.year}</span><span>{z.pages}</span>
+              </div>
+            </div>
+            {/* Drop shadow base */}
+            <div className="h-1" style={{ backgroundColor: z.color, opacity: 0.4 }} />
+          </div>
+
+          {/* Hover excerpt */}
+          <AnimatePresence>
+            {hovered === z.id && (
+              <motion.div
+                className="absolute top-full left-0 mt-2 w-56 p-3 border font-mono text-xs text-white/80 bg-black"
+                style={{ borderColor: z.color }}
+                initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+              >
+                {z.excerpt}
+                <div className="mt-2 font-bold" style={{ color: z.color }}>→ click to open</div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       ))}
 
-      {/* Central tape strip */}
-      <motion.div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-8 bg-[#9900ff]/20 border border-[#9900ff]/40 flex items-center justify-center"
-        style={{ rotate: -3 }}
-        animate={{ opacity: [0.4, 0.8, 0.4] }}
-        transition={{ duration: 4, repeat: Infinity }}
-      >
-        <span className="font-mono text-xs text-[#9900ff] tracking-widest">■ COLLAGE FRAGMENTS ■</span>
-      </motion.div>
-
-      {/* Glitch scan lines */}
-      {glitchActive && (
-        <motion.div className="absolute inset-0 pointer-events-none">
-          {[...Array(4)].map((_, i) => (
+      {/* Full-screen zine view */}
+      <AnimatePresence>
+        {openedZine && (
+          <motion.div
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setOpened(null)}
+          >
             <motion.div
-              key={i}
-              className="absolute w-full h-px bg-[#9900ff]"
-              style={{ top: `${20 + i * 20}%`, mixBlendMode: 'screen' }}
-              animate={{ x: ['-100%', '100%'], opacity: [0, 1, 0] }}
-              transition={{ duration: 0.08, delay: i * 0.02 }}
-            />
-          ))}
-        </motion.div>
-      )}
+              className="max-w-lg w-full mx-8 border-2 p-8 space-y-6"
+              style={{ borderColor: openedZine.color }}
+              initial={{ scale: 0.8, rotate: openedZine.rotation }}
+              animate={{ scale: 1, rotate: 0 }}
+              exit={{ scale: 0.8 }}
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <div className="font-mono text-xs mb-1" style={{ color: openedZine.color }}>{openedZine.tag} — ENTN {openedZine.issue}</div>
+                  <h2 className="text-4xl font-black text-white font-mono">{openedZine.title}</h2>
+                </div>
+                <button onClick={() => setOpened(null)} className="text-white/40 hover:text-white font-mono text-sm" data-interactive>✕</button>
+              </div>
+              <div className="h-px w-full" style={{ backgroundColor: openedZine.color }} />
+              <p className="font-mono text-sm text-white/70 leading-relaxed">{openedZine.excerpt}</p>
+              <div className="font-mono text-xs text-white/30 space-y-1">
+                <div>YEAR: {openedZine.year} / PAGES: {openedZine.pages} / PRINT: RISOGRAPH</div>
+                <div>DISTRO: DIRECT / COPIES: LIMITED</div>
+              </div>
+              <div className="h-px w-full border-dashed border-t" style={{ borderColor: `${openedZine.color}40` }} />
+              <div className="font-mono text-xs" style={{ color: openedZine.color }}>
+                [archive copy — handle with static]
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <motion.div
-        className="absolute bottom-6 left-6 font-mono text-[#9900ff] text-xs"
-        animate={{ opacity: [0.4, 1, 0.4] }}
-        transition={{ duration: 3, repeat: Infinity }}
-      >
-        ARCHIVE: TORN / FORMAT: UNKNOWN / INTEGRITY: 12%
+      <motion.div className="fixed bottom-6 left-6 font-mono text-[#9900ff] text-xs"
+        animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 3, repeat: Infinity }}>
+        ARCHIVE: {zines.length} ISSUES / FORMAT: PRINT / STATUS: CIRCULATING
       </motion.div>
     </div>
   );
