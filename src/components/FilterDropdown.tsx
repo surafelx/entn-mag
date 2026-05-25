@@ -27,14 +27,12 @@ export function FilterDropdown() {
   const handleFilterChange = (type: 'day' | 'issue', value: string) => {
     if (type === 'day') {
       setSelectedDay(value);
+      window.dispatchEvent(new CustomEvent('filter-change', { detail: { type, value } }));
     } else {
-      setSelectedIssue(value);
+      const next = selectedIssue === value ? '' : value;
+      setSelectedIssue(next);
+      window.dispatchEvent(new CustomEvent('filter-change', { detail: { type, value: next } }));
     }
-    
-    // Trigger content reload with animation
-    window.dispatchEvent(new CustomEvent('filter-change', { 
-      detail: { type, value, day: selectedDay, issue: selectedIssue } 
-    }));
   };
 
   return (

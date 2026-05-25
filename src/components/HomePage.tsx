@@ -19,7 +19,8 @@ const sections = [
     altDescription: 'broken frequencies echo',
     position: { x: '15%', y: '20%' },
     rotation: -15,
-    color: '#ff0080'
+    color: '#ff0080',
+    issue: 'current',
   },
   {
     name: 'outloud',
@@ -28,7 +29,8 @@ const sections = [
     altDescription: 'bass cathedral trembles',
     position: { x: '85%', y: '25%' },
     rotation: 12,
-    color: '#00ff41'
+    color: '#00ff41',
+    issue: 'chaos',
   },
   {
     name: 'blurredmap',
@@ -37,7 +39,8 @@ const sections = [
     altDescription: 'reality.exe corrupted',
     position: { x: '10%', y: '60%' },
     rotation: 8,
-    color: '#ffff00'
+    color: '#ffff00',
+    issue: 'static',
   },
   {
     name: 'looprot',
@@ -46,7 +49,8 @@ const sections = [
     altDescription: 'needle drops eternal',
     position: { x: '75%', y: '70%' },
     rotation: -8,
-    color: '#ff6600'
+    color: '#ff6600',
+    issue: 'neon',
   },
   {
     name: 'scrapfile',
@@ -55,7 +59,8 @@ const sections = [
     altDescription: 'memory.zip corrupted',
     position: { x: '25%', y: '80%' },
     rotation: 15,
-    color: '#9900ff'
+    color: '#9900ff',
+    issue: 'static',
   },
   {
     name: 'textwreck',
@@ -64,7 +69,8 @@ const sections = [
     altDescription: 'language.dll failed',
     position: { x: '90%', y: '50%' },
     rotation: -12,
-    color: '#ff0080'
+    color: '#ff0080',
+    issue: 'current',
   },
   {
     name: 'rawfeed',
@@ -73,7 +79,8 @@ const sections = [
     altDescription: 'signal interference',
     position: { x: '5%', y: '40%' },
     rotation: 20,
-    color: '#00ffff'
+    color: '#00ffff',
+    issue: 'chaos',
   },
   {
     name: 'noisebox',
@@ -82,7 +89,8 @@ const sections = [
     altDescription: 'frequency modulation',
     position: { x: '60%', y: '15%' },
     rotation: -5,
-    color: '#ff3366'
+    color: '#ff3366',
+    issue: 'chaos',
   },
   {
     name: 'breakcore',
@@ -91,7 +99,8 @@ const sections = [
     altDescription: 'tempo.exe crashed',
     position: { x: '40%', y: '90%' },
     rotation: 10,
-    color: '#66ff00'
+    color: '#66ff00',
+    issue: 'chaos',
   },
   {
     name: 'staticvoid',
@@ -100,7 +109,8 @@ const sections = [
     altDescription: 'void.wav playing',
     position: { x: '80%', y: '85%' },
     rotation: -18,
-    color: '#ff9900'
+    color: '#ff9900',
+    issue: 'neon',
   },
   {
     name: 'datacrash',
@@ -109,7 +119,8 @@ const sections = [
     altDescription: 'stack trace infinite',
     position: { x: '30%', y: '30%' },
     rotation: 7,
-    color: '#0099ff'
+    color: '#0099ff',
+    issue: 'current',
   },
   {
     name: 'pixeldrift',
@@ -118,7 +129,8 @@ const sections = [
     altDescription: 'render.exe halted',
     position: { x: '65%', y: '40%' },
     rotation: -10,
-    color: '#ff6699'
+    color: '#ff6699',
+    issue: 'current',
   },
   {
     name: 'synthwave',
@@ -127,7 +139,8 @@ const sections = [
     altDescription: '80s.dll loading...',
     position: { x: '45%', y: '65%' },
     rotation: 13,
-    color: '#9966ff'
+    color: '#9966ff',
+    issue: 'neon',
   },
 ];
 
@@ -142,6 +155,7 @@ export function HomePage() {
   const [mouseIdle, setMouseIdle] = useState(false);
   const [lastMouseMove, setLastMouseMove] = useState(Date.now());
   const [isLoading, setIsLoading] = useState(true);
+  const [activeIssue, setActiveIssue] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Handle loading completion
@@ -157,6 +171,19 @@ export function HomePage() {
       });
     }
   };
+
+  // Listen for filter changes from FilterDropdown
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail.type === 'issue') {
+        setActiveIssue(detail.value || null);
+        setHoveredSection(null);
+      }
+    };
+    window.addEventListener('filter-change', handler);
+    return () => window.removeEventListener('filter-change', handler);
+  }, [setHoveredSection]);
 
   // Initialize audio
   useEffect(() => {
@@ -520,7 +547,11 @@ export function HomePage() {
           }}
           initial={{ opacity: 0, y: 20 }}
           animate={{
-            opacity: hoveredSection !== null ? (hoveredSection === index ? 1 : 0.1) : 1,
+            opacity: hoveredSection !== null
+              ? (hoveredSection === index ? 1 : 0.1)
+              : activeIssue !== null
+                ? (section.issue === activeIssue ? 1 : 0.08)
+                : 1,
             y: 0,
             x: hoveredSection === index ? [0, 2, -2, 0] : 0,
             scale: hoveredSection === index ? 1.3 : (hoveredSection !== null ? 0.8 : 1),
