@@ -87,7 +87,7 @@ export function ShopSection() {
 
   return (
     /* fixed inset-0 with overflow-y-auto lets the content scroll within the viewport */
-    <div className="fixed inset-0 bg-black overflow-y-auto">
+    <div className="fixed inset-0 bg-black overflow-y-auto z-[110]">
 
       {/* Sticky header */}
       <div className="sticky top-0 z-[140] bg-black/95 border-b border-white/10 backdrop-blur-sm">

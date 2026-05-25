@@ -68,7 +68,7 @@ export function DataCrashSection() {
   };
 
   return (
-    <div className="fixed inset-0 overflow-hidden font-mono"
+    <div className="fixed inset-0 overflow-hidden font-mono z-[110]"
       style={{ backgroundColor: phase === 'bsod' ? '#0000AA' : '#000000' }}>
 
       <AnimatePresence>

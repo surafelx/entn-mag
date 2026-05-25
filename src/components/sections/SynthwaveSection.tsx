@@ -32,7 +32,7 @@ export function SynthwaveSection() {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-black overflow-hidden">
+    <div className="fixed inset-0 bg-black overflow-hidden z-[110]">
       <Link href="/">
         <motion.button
           className="fixed top-6 left-6 z-[150] flex items-center gap-2 text-white hover:text-[#9966ff] transition-colors font-mono text-sm bg-black/90 px-3 py-2 border border-white/20"

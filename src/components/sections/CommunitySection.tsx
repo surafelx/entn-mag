@@ -49,7 +49,7 @@ export function CommunitySection() {
   };
 
   return (
-    <div className="fixed inset-0 bg-black flex flex-col">
+    <div className="fixed inset-0 bg-black flex flex-col z-[110]">
       {/* Header */}
       <div className="flex-none border-b border-white/10 z-40">
         <div className="h-14 flex items-center px-6 gap-4">

@@ -77,7 +77,7 @@ export function RawFeedSection() {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-black overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black overflow-hidden flex flex-col z-[110]">
       {/* Header bar */}
       <div className="flex-none border-b border-[#00ffff]/20">
         <div className="h-14 flex items-center px-6 gap-4">
