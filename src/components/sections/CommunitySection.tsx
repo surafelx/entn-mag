@@ -50,36 +50,39 @@ export function CommunitySection() {
 
   return (
     <div className="fixed inset-0 bg-black flex flex-col">
-      <Link href="/">
-        <motion.button
-          className="fixed top-6 left-6 z-[150] flex items-center gap-2 text-white hover:text-[#00ff41] transition-colors font-mono text-sm bg-black/80 px-3 py-2 border border-white/20"
-          data-interactive
-          whileHover={{ x: -5 }}
-        >
-          <ArrowLeft size={16} />
-          BACK
-        </motion.button>
-      </Link>
-
-      <motion.div
-        className="text-center pt-6 pb-4 z-40 relative"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <h1
-          className="text-4xl font-bold tracking-wider font-mono"
-          style={{
-            color: glitch ? '#ff0080' : '#00ff41',
-            textShadow: glitch ? '3px 0 0 #ff0080, -3px 0 0 #ffff00' : 'none',
-          }}
-        >
-          COMMUNITY<span className="text-white">WALL</span>
-        </h1>
-        <p className="font-mono text-white/30 text-xs mt-1">unmoderated. unfiltered. real signals only.</p>
-      </motion.div>
+      {/* Header */}
+      <div className="flex-none border-b border-white/10 z-40">
+        <div className="h-14 flex items-center px-6 gap-4">
+          <Link href="/">
+            <motion.button
+              className="flex items-center gap-2 text-white hover:text-[#00ff41] transition-colors font-mono text-sm"
+              data-interactive
+              whileHover={{ x: -5 }}
+            >
+              <ArrowLeft size={16} />
+              BACK
+            </motion.button>
+          </Link>
+          <motion.h1
+            className="flex-1 text-center text-2xl font-bold tracking-wider font-mono"
+            style={{
+              color: glitch ? '#ff0080' : '#00ff41',
+              textShadow: glitch ? '3px 0 0 #ff0080, -3px 0 0 #ffff00' : 'none',
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            COMMUNITY<span className="text-white">WALL</span>
+          </motion.h1>
+          <span className="font-mono text-xs text-[#00ff41]/40 whitespace-nowrap">{posts.length} signals</span>
+        </div>
+        <div className="px-6 pb-1">
+          <p className="font-mono text-white/25 text-xs">unmoderated. unfiltered. real signals only.</p>
+        </div>
+      </div>
 
       {/* Post compose */}
-      <div className="px-6 pb-4 border-b border-white/10 space-y-2 z-40 relative">
+      <div className="px-6 py-3 border-b border-white/10 space-y-2 z-40 relative">
         <input
           className="w-full bg-transparent border border-white/20 px-3 py-2 font-mono text-xs text-white placeholder-white/20 outline-none focus:border-[#00ff41]/50"
           placeholder="HANDLE (optional)"
@@ -131,13 +134,11 @@ export function CommunitySection() {
         </AnimatePresence>
       </div>
 
-      <motion.div
-        className="absolute bottom-3 right-6 font-mono text-[#00ff41]/40 text-xs"
-        animate={{ opacity: [0.2, 0.6, 0.2] }}
-        transition={{ duration: 3, repeat: Infinity }}
-      >
-        {posts.length} signals received
-      </motion.div>
+      <div className="flex-none h-8 border-t border-white/10 flex items-center px-6 font-mono text-xs text-white/20">
+        <motion.span animate={{ opacity: [0.2, 0.6, 0.2] }} transition={{ duration: 3, repeat: Infinity }}>
+          ● LIVE TRANSMISSION / ENTN COMMUNITY
+        </motion.span>
+      </div>
     </div>
   );
 }

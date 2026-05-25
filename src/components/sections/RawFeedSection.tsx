@@ -78,38 +78,40 @@ export function RawFeedSection() {
 
   return (
     <div className="fixed inset-0 bg-black overflow-hidden flex flex-col">
-      <Link href="/">
-        <motion.button
-          className="fixed top-6 left-6 z-[150] flex items-center gap-2 text-white hover:text-[#00ffff] transition-colors font-mono text-sm bg-black/90 px-3 py-2 border border-white/20"
-          data-interactive whileHover={{ x: -5 }}
-        >
-          <ArrowLeft size={16} /> BACK
-        </motion.button>
-      </Link>
-
       {/* Header bar */}
-      <div className="flex-none h-16 border-b border-[#00ffff]/20 flex items-center justify-between px-8 pt-1">
-        <div className="font-mono text-lg font-bold" style={{ color: glitch ? '#ff0080' : '#00ffff' }}>
-          RAW<span className="text-white">FEED</span>
-        </div>
+      <div className="flex-none border-b border-[#00ffff]/20">
+        <div className="h-14 flex items-center px-6 gap-4">
+          <Link href="/">
+            <motion.button
+              className="flex items-center gap-2 text-white hover:text-[#00ffff] transition-colors font-mono text-sm"
+              data-interactive whileHover={{ x: -5 }}
+            >
+              <ArrowLeft size={16} /> BACK
+            </motion.button>
+          </Link>
 
-        {/* Signal strength */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-end gap-px h-5">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="w-1.5 transition-all"
-                style={{ height: `${(i + 1) * 12.5}%`, backgroundColor: signal > i * 12 ? '#00ffff' : 'rgba(0,255,255,0.15)' }} />
-            ))}
+          <div className="flex-1 text-center font-mono text-xl font-bold" style={{ color: glitch ? '#ff0080' : '#00ffff' }}>
+            RAW<span className="text-white">FEED</span>
           </div>
-          <span className="font-mono text-xs text-[#00ffff]">{signal}%</span>
-          <motion.span className="font-mono text-xs text-[#00ff41]"
-            animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.5, repeat: Infinity }}>
-            ● LIVE
-          </motion.span>
+
+          {/* Signal strength */}
+          <div className="flex items-center gap-3">
+            <div className="flex items-end gap-px h-5">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="w-1.5 transition-all"
+                  style={{ height: `${(i + 1) * 12.5}%`, backgroundColor: signal > i * 12 ? '#00ffff' : 'rgba(0,255,255,0.15)' }} />
+              ))}
+            </div>
+            <span className="font-mono text-xs text-[#00ffff]">{signal}%</span>
+            <motion.span className="font-mono text-xs text-[#00ff41]"
+              animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 1.5, repeat: Infinity }}>
+              ● LIVE
+            </motion.span>
+          </div>
         </div>
 
-        {/* Category legend */}
-        <div className="flex gap-4">
+        {/* Category legend sub-bar */}
+        <div className="flex items-center gap-3 px-6 pb-2 flex-wrap">
           {Object.entries(typeColors).map(([type, color]) => (
             <span key={type} className="font-mono text-xs" style={{ color }}>[{type}]</span>
           ))}
