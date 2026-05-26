@@ -138,7 +138,7 @@ export function GlitchMouthSection() {
   }, [selectedVideo, mouseTimeout, handleMouseMove]);
 
   return (
-    <div className="w-full h-full relative overflow-hidden bg-black">
+    <div className="fixed inset-0 bg-black overflow-hidden z-[110]">
 
       {/* Back button */}
       <Link href="/">

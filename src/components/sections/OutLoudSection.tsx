@@ -48,33 +48,32 @@ export function OutLoudSection() {
   }, [events.length]);
 
   return (
-    <div className="w-full h-full relative overflow-hidden bg-black">
-      {/* Back button */}
-      <Link href="/">
-        <motion.button
-          className="absolute top-6 left-6 z-50 flex items-center gap-2 text-white hover:text-[#ff0080] transition-colors font-mono text-sm"
-          data-interactive
-          whileHover={{ x: -5 }}
+    <div className="fixed inset-0 bg-black overflow-hidden z-[110] flex flex-col">
+      {/* Header */}
+      <div className="flex-none h-14 border-b border-white/10 flex items-center px-6 gap-4 z-40">
+        <Link href="/">
+          <motion.button
+            className="flex items-center gap-2 text-white hover:text-[#ff0080] transition-colors font-mono text-sm"
+            data-interactive
+            whileHover={{ x: -5 }}
+          >
+            <ArrowLeft size={16} />
+            BACK
+          </motion.button>
+        </Link>
+        <motion.h1
+          className="flex-1 text-center text-2xl font-bold tracking-wider text-white font-mono"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
         >
-          <ArrowLeft size={16} />
-          BACK
-        </motion.button>
-      </Link>
-
-      {/* Section title */}
-      <motion.div
-        className="absolute top-6 left-1/2 transform -translate-x-1/2 z-40"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <h1 className="text-4xl font-bold tracking-wider text-white text-distorted">
-          OUTLOUD
-        </h1>
-      </motion.div>
+          OUT<span className="text-[#ff0080]">LOUD</span>
+        </motion.h1>
+        <div className="w-16" />
+      </div>
 
       {/* Audio visualizer mockup */}
       <motion.div
-        className="absolute top-20 right-6 w-64 h-32 border border-white/30"
+        className="absolute top-20 right-6 w-64 h-32 border border-white/30 z-30"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.5 }}
@@ -105,7 +104,7 @@ export function OutLoudSection() {
       </motion.div>
 
       {/* Main event display */}
-      <div className="absolute inset-0 pt-32 pb-20 px-12">
+      <div className="flex-1 relative px-12 pb-8 overflow-hidden">
         <div className="h-full flex items-center justify-center">
           <motion.div
             key={activeEvent}
@@ -198,7 +197,7 @@ export function OutLoudSection() {
       </div>
 
       {/* Background noise pattern */}
-      <div className="absolute inset-0 pointer-events-none opacity-10">
+      <div className="fixed inset-0 pointer-events-none opacity-10 z-[105]">
         <div 
           className="w-full h-full"
           style={{
